@@ -1,0 +1,61 @@
+<tool id="sarscov2genomes" name="SARS CoV-2 Genomes" version="1.0">
+    <description>performs automatic construction and analysis of SARS-CoV-2 genomes from NGS sequencing data</description>
+    <requirements>
+        <requirement type="package" version="3.7">python</requirement>
+        <requirement type="package" version="0.39">trimmomatic</requirement>
+        <requirement type="package" version="2.3.4">bowtie2</requirement>
+    </requirements>
+    <!-- basic error handling -->
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    echo $strain > $strainname &&
+    echo $library > $librarytype &&
+	touch $trimmed2 &&
+    python
+      $__tool_directory__/SARS-CoV-2-Genomes.py
+      --library $library -1 $input1 -2 $input2 --trimmed1 $trimmed1 --trimmed2 $trimmed2
+      --human_genome_aligned $human_genome_aligned --covidref_aligned $covidref_aligned
+	  --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
+]]>
+    </command>
+
+    <inputs>
+        <param name="strain" type="text" label="Set output FASTA ID with Strain name" />
+        <param name="library" type="select" label="What kind of sequences are you using?">
+            <option value="iont">Ion torrent</option>
+            <option value="illu">Illumina</option>
+            <option value="nano">Nanopore</option>
+		</param>
+		<param name="input1" format="fastqsanger" type="data" label="FASTQ file #1" help="Must be of datatype &quot;fastqsanger&quot;" />
+		<param name="input2" format="fastqsanger" type="data" label="FASTQ file #2 (will only be used for Illumina, otherwise ignored)" help="Must be of datatype &quot;fastqsanger&quot;" />
+	</inputs>
+
+    <!-- define outputs -->
+    <outputs>
+        <data name="strainname" format="txt" label="${tool.name} on ${on_string}: strain name" />
+        <data name="librarytype" format="txt" label="${tool.name} on ${on_string}: library type" />
+		<data name="trimmed1" format="fastqsanger" label="Trimmomatic on ${on_string}" />
+        <data name="trimmed2" format="fastqsanger" label="Trimmomatic on ${on_string}" />
+		<data name="human_genome_aligned" format="bam" label="Bowtie2 Human Genome aligned reads on ${on_string}" />
+		<data name="covidref_aligned" format="bam" label="Bowtie2 SARS CoV-2 aligned reads on ${on_string}" />
+		<data name="reference_genbank" format="genbank" label="Reference GenBank file" />
+		<data name="reference_fasta" format="fasta" label="Reference fasta file" />
+		<data name="proteinentcovid19" format="fasta" label="ProteineNt_Covid19 fasta file" />
+    </outputs>
+
+
+    <help>
+**SARS CoV-2 Genomes Overview**
+This tool performs automatic construction and analysis of SARS-CoV-2 genomes from NGS sequencing data
+
+Istituto Superiore di Sanità
+    </help>
+    <citations>
+      <citation type="doi">10.1093/bioinformatics/btu170</citation>
+      <citation type="doi">10.1186/gb-2009-10-3-r25</citation>
+      <citation type="doi">10.1038/nmeth.1923</citation>
+    </citations>
+</tool>

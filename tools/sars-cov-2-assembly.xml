@@ -1,0 +1,43 @@
+<tool id="sarscov2assembly" name="SARS CoV-2 Assembly" version="1.0">
+    <description>performs automatic assembly of SARS-CoV-2 genomes from NGS sequencing data</description>
+    <requirements>
+        <requirement type="package" version="3.14.0">spades</requirement>
+    </requirements>
+    <!-- basic error handling -->
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    python
+    $__tool_directory__/SARS-CoV-2-Assembly.py
+        --library $librarytype -1 $input1 -2 $input2
+        --spades_contigs $spades_contigs --spades_contig_stats $spades_contig_stats --spades_scaffolds $spades_scaffolds --spades_scaffold_stats $spades_scaffold_stats --spades_log $spades_log 
+]]>
+    </command>
+
+    <inputs>
+        <param name="librarytype" format="txt" type="data" label="Library type" />
+		<param name="input1" format="fastqsanger" type="data" label="FASTQ file #1" help="Must be of datatype &quot;fastqsanger&quot;" />
+		<param name="input2" format="fastqsanger" type="data" label="FASTQ file #2" help="Must be of datatype &quot;fastqsanger&quot;" />
+	</inputs>
+
+    <!-- define outputs -->
+    <outputs>
+		<data name="spades_contigs" format="fasta" label="SPAdes contigs on ${on_string}" />
+		<data name="spades_contig_stats" format="tabular" label="SPAdes contig stats on ${on_string}" />
+		<data name="spades_scaffolds" format="fasta" label="SPAdes scaffolds on ${on_string}" />
+		<data name="spades_scaffold_stats" format="tabular" label="SPAdes scaffold stats on ${on_string}" />
+		<data name="spades_log" format="txt" label="SPAdes log on ${on_string}" />
+    </outputs>
+
+    <help>
+**SARS CoV-2 Assembly Overview**
+This tool performs automatic assembly of SARS-CoV-2 genomes from NGS sequencing data
+
+Istituto Superiore di Sanità
+    </help>
+    <citations>
+      <citation type="doi">10.1089/cmb.2012.0021</citation>
+    </citations>
+</tool>
