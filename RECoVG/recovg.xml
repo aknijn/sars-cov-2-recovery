@@ -1,0 +1,51 @@
+<tool id="recovg" name="RECoVG" version="3.1">
+    <description>Only to be used through IRIDA</description>
+    <requirements>
+        <requirement type="package" version="3.7">python</requirement>
+        <requirement type="package" version="0.39">trimmomatic</requirement>
+        <requirement type="package" version="2.3.4">bowtie2</requirement>
+        <requirement type="package" version="2.17">minimap2</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    #if $token == "D85SteptkQZ9MobOk9pa":
+        #if str( $input_pc.reverse.name ) == "dummy.fastq":
+          #set $library = "iont"
+        #else
+          #set $library = "illu"
+        #end if
+        echo $library > $librarytype &&
+        echo $strain > $strainname &&
+        python
+          $__tool_directory__/RECoVG.py
+          --library $library -1 ${input_pc.forward} -2 ${input_pc.reverse}
+          --human_genome_aligned $human_genome_aligned --covidref_aligned $covidref_aligned
+	      --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
+    #end if
+]]>
+    </command>
+
+    <inputs>
+        <param name="token" type="text" label="execution token" />
+        <param name="strain" type="text" label="Set output FASTA ID with Strain name" />
+        <param name="library" type="select" label="What kind of sequences are you using?">
+            <option value="iont">Ion torrent</option>
+            <option value="illu">Illumina</option>
+            <option value="nano">Nanopore</option>
+		</param>
+        <param name="input_pc" type="data_collection"  format="fastqsanger" collection_type="paired" label="Paired-end FASTQ collection" help="Must be of datatype &quot;fastqsanger&quot;" optional="false" />
+	</inputs>
+
+    <outputs>
+        <data name="strainname" format="txt" label="${tool.name} on ${on_string}: strain name" />
+        <data name="librarytype" format="txt" label="${tool.name} on ${on_string}: library type" />
+		<data name="human_genome_aligned" format="bam" label="Human Genome aligned reads on ${on_string}" />
+		<data name="covidref_aligned" format="bam" label="SARS CoV-2 aligned reads on ${on_string}" />
+		<data name="reference_genbank" format="genbank" label="Reference GenBank file" />
+		<data name="reference_fasta" format="fasta" label="Reference fasta file" />
+		<data name="proteinentcovid19" format="fasta" label="ProteineNt_Covid19 fasta file" />
+    </outputs>
+</tool>
