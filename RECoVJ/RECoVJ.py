@@ -72,7 +72,7 @@ def main():
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
-        if tab_lineage[1][4] != 'qc_passed':
+        if tab_lineage[1][4] != 'passed_qc':
             report_data["qc_status"] = 'Failed'
         else:
             report_data["qc_status"] = 'Passed'
