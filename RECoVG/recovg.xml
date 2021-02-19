@@ -12,17 +12,29 @@
     <command>
 <![CDATA[
     #if $token == "D85SteptkQZ9MobOk9pa":
-        #if str( $input_pc.reverse.name ) == "dummy.fastq":
-          #set $library = "iont"
-        #else
+        #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
+          #if str( $input_pc.forward.name ).endswith(".fasta") or str( $input_pc.reverse.name ).endswith(".fasta"):
+            #set $library = "sang"
+          #else:
+            #if str( $input_pc.forward.name ).endswith(".fast5") or str( $input_pc.reverse.name ).endswith(".fast5"):
+              #set $library = "nano"
+            #else:
+              #set $library = "iont"
+            #end if
+          #end if
+        #else:
           #set $library = "illu"
         #end if
         echo $library > $librarytype &&
         echo $strain > $strainname &&
         python
-          $__tool_directory__/RECoVG.py
-          --library $library -1 ${input_pc.forward} -2 ${input_pc.reverse}
-          --human_genome_aligned $human_genome_aligned --covidref_aligned $covidref_aligned
+          $__tool_directory__/RECoVG.py --library $library
+          #if str( $input_pc.forward.name ) == "dummy.fastq":
+		    -1 ${input_pc.reverse} -2 ${input_pc.forward}
+		  #else:
+            -1 ${input_pc.forward} -2 ${input_pc.reverse}
+		  #end if
+          --covidref_aligned $covidref_aligned
 	      --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
     #end if
 ]]>
@@ -35,6 +47,7 @@
             <option value="iont">Ion torrent</option>
             <option value="illu">Illumina</option>
             <option value="nano">Nanopore</option>
+            <option value="nano">Sanger</option>
 		</param>
         <param name="input_pc" type="data_collection"  format="fastqsanger" collection_type="paired" label="Paired-end FASTQ collection" help="Must be of datatype &quot;fastqsanger&quot;" optional="false" />
 	</inputs>
@@ -42,7 +55,6 @@
     <outputs>
         <data name="strainname" format="txt" label="${tool.name} on ${on_string}: strain name" />
         <data name="librarytype" format="txt" label="${tool.name} on ${on_string}: library type" />
-		<data name="human_genome_aligned" format="bam" label="Human Genome aligned reads on ${on_string}" />
 		<data name="covidref_aligned" format="bam" label="SARS CoV-2 aligned reads on ${on_string}" />
 		<data name="reference_genbank" format="genbank" label="Reference GenBank file" />
 		<data name="reference_fasta" format="fasta" label="Reference fasta file" />

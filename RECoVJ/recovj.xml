@@ -11,7 +11,11 @@
 <![CDATA[
         #if $token == "D85SteptkQZ9MobOk9pa":
             python 
-			$__tool_directory__/RECoVJ.py --strain $strain --region $region --year $year --lineage $lineage --variants $variants --recovery_json $recovery_type
+			$__tool_directory__/RECoVJ.py
+			--strain $strain --librarytype $librarytype
+			--region $region --year $year
+			--lineage $lineage --variants $variants
+			--recovery_json $recovery_type
         #else
             touch $recovery_type
         #end if  
@@ -23,6 +27,7 @@
         <param name="strain" type="text" label="name" />
         <param name="region" type="text" label="Sample Region" />
         <param name="year" type="text" label="Sample Year" />
+        <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="lineage" format="csv" type="data" label="lineage" />
         <param name="variants" format="tab" type="data" label="variants" />
    </inputs>

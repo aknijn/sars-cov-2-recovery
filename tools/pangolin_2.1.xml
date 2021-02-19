@@ -9,7 +9,7 @@
     </stdio>
     <command>
 <![CDATA[
-    pangolin $input 
+    pangolin --min-length 3600 $input 
 ]]>
     </command>
     <inputs>

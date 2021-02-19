@@ -46,7 +46,7 @@ def colindex(gene):
     return colindexes.get(gene, 11)
 
 def format_variants(str_variants):
-    if str_variants == '=':
+    if str_variants == '=' or str_variants == 'ND':
         formatted_variants = str_variants
     else:
         formatted_variants = str_variants[1:-1]
@@ -54,7 +54,8 @@ def format_variants(str_variants):
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--strain', dest='strain', help='strain')
+    parser.add_argument('--strain', dest='strain', help='strain name')
+    parser.add_argument('--librarytype', dest='librarytype', help='library type')
     parser.add_argument('--region', dest='region', help='region')
     parser.add_argument('--year', dest='year', help='year')
     parser.add_argument('--lineage', dest='lineage', help='lineage')
@@ -73,16 +74,24 @@ def main():
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
         if tab_lineage[1][4] != 'passed_qc':
-            report_data["qc_status"] = 'Failed'
+            if tab_lineage[1][5][:8] == 'seq_len:':
+                report_data["qc_status"] = 'ND'
+            else:
+                report_data["qc_status"] = 'Failed'
         else:
             report_data["qc_status"] = 'Passed'
         with open(args.variants) as table_in:
-            tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]        
+            tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
+        if open(args.librarytype).readline().rstrip() == 'sang':
+            strDefault = "ND"
+        else:
+            strDefault = "="
         for i in range(0,12):
-            report_variants.append("=")
+            report_variants.append(strDefault)
+        report_variants[1] = "="
         for variant in tab_variants:
-            if variant[1] != 'POS' and colindex(variant[0]) != 11:
-                report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + ";"
+            if variant[1] != 'POS' and colindex(variant[0]) != 11 and variant[7] != 'S':
+                report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "; "
                 # report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[1] + ":" + variant[2] + "/" + variant[3] + ";"
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])
