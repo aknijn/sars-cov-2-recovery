@@ -91,7 +91,10 @@ def main():
         report_variants[1] = "="
         for variant in tab_variants:
             if variant[1] != 'POS' and colindex(variant[0]) != 11 and variant[7] != 'S':
-                report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "; "
+                if "DELETION" in variant[5]:
+                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "_del; "
+                else:
+                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "; "
                 # report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[1] + ":" + variant[2] + "/" + variant[3] + ";"
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])

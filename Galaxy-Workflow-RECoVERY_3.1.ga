@@ -20,8 +20,8 @@
             "name": "Input dataset collection",
             "outputs": [],
             "position": {
-                "left": 134,
-                "top": 266.43333435058594
+                "left": 120.63333129882812,
+                "top": 272.23333740234375
             },
             "tool_id": null,
             "tool_state": "{\"optional\": false, \"collection_type\": \"list:paired\"}",
@@ -32,7 +32,7 @@
                 {
                     "label": null,
                     "output_name": "output",
-                    "uuid": "4fb058f5-5b31-4619-8e77-44597f1e9af0"
+                    "uuid": "b42cfd76-2928-44a3-b929-bdbe83c120de"
                 }
             ]
         },
@@ -77,47 +77,47 @@
                 }
             ],
             "position": {
-                "left": 126.89999389648438,
-                "top": 354.23333740234375
+                "left": 143.88333129882812,
+                "top": 370.06666564941406
             },
-            "post_job_actions": {},
+            "post_job_actions": {
+                "HideDatasetActioncovidref_aligned": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "covidref_aligned"
+                },
+                "HideDatasetActionlibrarytype": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "librarytype"
+                },
+                "HideDatasetActionproteinentcovid19": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "proteinentcovid19"
+                },
+                "HideDatasetActionreference_fasta": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "reference_fasta"
+                },
+                "HideDatasetActionreference_genbank": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "reference_genbank"
+                },
+                "HideDatasetActionstrainname": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "strainname"
+                }
+            },
             "tool_id": "recovg",
             "tool_state": "{\"input_pc\": {\"__class__\": \"ConnectedValue\"}, \"library\": \"iont\", \"strain\": \"\", \"token\": \"\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
             "tool_version": "3.1",
             "type": "tool",
             "uuid": "f53be35b-3d47-4b9b-9075-9c58d0b9e3c4",
-            "workflow_outputs": [
-                {
-                    "label": null,
-                    "output_name": "strainname",
-                    "uuid": "66dba45c-c761-4907-8689-ea9d68f75265"
-                },
-                {
-                    "label": null,
-                    "output_name": "reference_genbank",
-                    "uuid": "e0420c6e-219c-4dab-9324-8aa82012916b"
-                },
-                {
-                    "label": null,
-                    "output_name": "librarytype",
-                    "uuid": "75fba86c-149c-4016-8f99-ba39907aaec4"
-                },
-                {
-                    "label": null,
-                    "output_name": "proteinentcovid19",
-                    "uuid": "24ab962b-2500-4ea4-8cb5-a6a3e75b2683"
-                },
-                {
-                    "label": null,
-                    "output_name": "reference_fasta",
-                    "uuid": "d6d734ca-2af7-4f7f-8e43-d9759a773dd7"
-                },
-                {
-                    "label": null,
-                    "output_name": "covidref_aligned",
-                    "uuid": "90492868-2530-4580-a172-714ad0e9d9a2"
-                }
-            ]
+            "workflow_outputs": []
         },
         "2": {
             "annotation": "",
@@ -140,8 +140,8 @@
                 }
             ],
             "position": {
-                "left": 244.10000610351562,
-                "top": 324.2833251953125
+                "left": 317.4000244140625,
+                "top": 352.01666259765625
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -184,8 +184,8 @@
                 }
             ],
             "position": {
-                "left": 244.183349609375,
-                "top": 354.433349609375
+                "left": 317.4666748046875,
+                "top": 372.1999969482422
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -228,8 +228,8 @@
                 }
             ],
             "position": {
-                "left": 243.88333129882812,
-                "top": 380.933349609375
+                "left": 317.26666259765625,
+                "top": 389.9499969482422
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -272,8 +272,8 @@
                 }
             ],
             "position": {
-                "left": 245.23333740234375,
-                "top": 412.23333740234375
+                "left": 318.16668701171875,
+                "top": 410.93333435058594
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -316,8 +316,8 @@
                 }
             ],
             "position": {
-                "left": 244.58331298828125,
-                "top": 444.1166687011719
+                "left": 317.73333740234375,
+                "top": 432.28334045410156
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -360,8 +360,8 @@
                 }
             ],
             "position": {
-                "left": 243.88333129882812,
-                "top": 474.3666687011719
+                "left": 317.26666259765625,
+                "top": 452.56666564941406
             },
             "post_job_actions": {
                 "HideDatasetActionoutput": {
@@ -408,8 +408,8 @@
                 }
             ],
             "position": {
-                "left": 264.48333740234375,
-                "top": 211.96665954589844
+                "left": 330.066650390625,
+                "top": 191.73333740234375
             },
             "post_job_actions": {
                 "HideDatasetActionraw_data": {
@@ -473,8 +473,8 @@
                 }
             ],
             "position": {
-                "left": 451.566650390625,
-                "top": 233.93333435058594
+                "left": 516.4166870117188,
+                "top": 221.4499969482422
             },
             "post_job_actions": {
                 "ChangeDatatypeActionconsensus": {
@@ -526,8 +526,8 @@
                 }
             ],
             "position": {
-                "left": 416.79998779296875,
-                "top": 505.5
+                "left": 522.0999755859375,
+                "top": 439.3999938964844
             },
             "post_job_actions": {
                 "HideDatasetActionsnpeff_output": {
@@ -564,7 +564,16 @@
                     "output_name": "output"
                 }
             },
-            "inputs": [],
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool ivar variants",
+                    "name": "input_bam"
+                },
+                {
+                    "description": "runtime parameter for tool ivar variants",
+                    "name": "ref"
+                }
+            ],
             "label": null,
             "name": "ivar variants",
             "outputs": [
@@ -574,8 +583,8 @@
                 }
             ],
             "position": {
-                "left": 331.4000244140625,
-                "top": 607.316650390625
+                "left": 392.88330078125,
+                "top": 614.6166687011719
             },
             "post_job_actions": {
                 "HideDatasetActionoutput_variants": {
@@ -591,7 +600,7 @@
                 "owner": "iuc",
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             },
-            "tool_state": "{\"input_bam\": {\"__class__\": \"ConnectedValue\"}, \"min_freq\": \"0.3\", \"min_qual\": \"20\", \"ref\": {\"__class__\": \"ConnectedValue\"}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_state": "{\"input_bam\": {\"__class__\": \"RuntimeValue\"}, \"min_freq\": \"0.3\", \"min_qual\": \"20\", \"ref\": {\"__class__\": \"RuntimeValue\"}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
             "tool_version": "1.2+galaxy0",
             "type": "tool",
             "uuid": "8f568bb9-952b-41e4-8a94-19f094e4773a",
@@ -612,16 +621,7 @@
                     "output_name": "output"
                 }
             },
-            "inputs": [
-                {
-                    "description": "runtime parameter for tool NCBI BLAST+ blastn",
-                    "name": "db_opts"
-                },
-                {
-                    "description": "runtime parameter for tool NCBI BLAST+ blastn",
-                    "name": "query"
-                }
-            ],
+            "inputs": [],
             "label": null,
             "name": "NCBI BLAST+ blastn",
             "outputs": [
@@ -631,8 +631,8 @@
                 }
             ],
             "position": {
-                "left": 631.13330078125,
-                "top": 217.5833282470703
+                "left": 692.7166748046875,
+                "top": 191.51666259765625
             },
             "post_job_actions": {
                 "HideDatasetActionoutput1": {
@@ -648,7 +648,7 @@
                 "owner": "devteam",
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             },
-            "tool_state": "{\"adv_opts\": {\"adv_opts_selector\": \"advanced\", \"__current_case__\": 1, \"filter_query\": \"true\", \"strand\": \"-strand plus\", \"max_hits\": \"1\", \"identity_cutoff\": \"70.0\", \"word_size\": \"0\", \"ungapped\": \"false\", \"parse_deflines\": \"false\", \"adv_optional_id_files_opts\": {\"adv_optional_id_files_opts_selector\": \"none\", \"__current_case__\": 0}, \"qcov_hsp_perc\": \"10.0\"}, \"blast_type\": \"megablast\", \"db_opts\": {\"db_opts_selector\": \"file\", \"__current_case__\": 2, \"database\": \"\", \"histdb\": \"\", \"subject\": {\"__class__\": \"RuntimeValue\"}}, \"evalue_cutoff\": \"0.001\", \"output\": {\"out_format\": \"ext\", \"__current_case__\": 1}, \"query\": {\"__class__\": \"RuntimeValue\"}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_state": "{\"adv_opts\": {\"adv_opts_selector\": \"advanced\", \"__current_case__\": 1, \"filter_query\": \"true\", \"strand\": \"-strand plus\", \"max_hits\": \"1\", \"identity_cutoff\": \"70.0\", \"word_size\": \"0\", \"ungapped\": \"false\", \"parse_deflines\": \"false\", \"adv_optional_id_files_opts\": {\"adv_optional_id_files_opts_selector\": \"none\", \"__current_case__\": 0}, \"qcov_hsp_perc\": \"10.0\"}, \"blast_type\": \"megablast\", \"db_opts\": {\"db_opts_selector\": \"file\", \"__current_case__\": 2, \"database\": \"\", \"histdb\": \"\", \"subject\": {\"__class__\": \"ConnectedValue\"}}, \"evalue_cutoff\": \"0.001\", \"output\": {\"out_format\": \"ext\", \"__current_case__\": 1}, \"query\": {\"__class__\": \"ConnectedValue\"}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
             "tool_version": "0.2.00",
             "type": "tool",
             "uuid": "22e6156c-e787-4c79-834d-65295d97fb3d",
@@ -675,8 +675,8 @@
                 }
             ],
             "position": {
-                "left": 701.9666748046875,
-                "top": 397.76666259765625
+                "left": 687.183349609375,
+                "top": 402.23333740234375
             },
             "post_job_actions": {
                 "ChangeDatatypeActionlineage": {
@@ -718,7 +718,12 @@
                     "output_name": "output_variants"
                 }
             },
-            "inputs": [],
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool iVar Variants to VCF",
+                    "name": "input"
+                }
+            ],
             "label": null,
             "name": "iVar Variants to VCF",
             "outputs": [
@@ -728,12 +733,12 @@
                 }
             ],
             "position": {
-                "left": 503.58331298828125,
-                "top": 712.88330078125
+                "left": 544.2666625976562,
+                "top": 684.3500061035156
             },
             "post_job_actions": {},
             "tool_id": "ivar_variants_to_vcf",
-            "tool_state": "{\"input\": {\"__class__\": \"ConnectedValue\"}, \"min_allele_freq\": \"0.0\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_state": "{\"input\": {\"__class__\": \"RuntimeValue\"}, \"min_allele_freq\": \"0.6\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
             "tool_version": "0.1.0",
             "type": "tool",
             "uuid": "a51b716c-0477-4bb3-ac26-54cbfa34c4ed",
@@ -766,8 +771,8 @@
                 }
             ],
             "position": {
-                "left": 728.433349609375,
-                "top": 200
+                "left": 844.9166259765625,
+                "top": 196.6999969482422
             },
             "post_job_actions": {
                 "HideDatasetActionout_file1": {
@@ -812,8 +817,8 @@
                 }
             ],
             "position": {
-                "left": 595.86669921875,
-                "top": 486.5
+                "left": 599.0999755859375,
+                "top": 533.6666717529297
             },
             "post_job_actions": {
                 "HideDatasetActionsnpeff_output": {
@@ -869,8 +874,8 @@
                 }
             ],
             "position": {
-                "left": 857.2333984375,
-                "top": 212.35000610351562
+                "left": 898.199951171875,
+                "top": 286.98333740234375
             },
             "post_job_actions": {},
             "tool_id": "toolshed.g2.bx.psu.edu/repos/devteam/tabular_to_fasta/tab2fasta/1.1.1",
@@ -913,8 +918,8 @@
                 }
             ],
             "position": {
-                "left": 763,
-                "top": 543.8666687011719
+                "left": 750.066650390625,
+                "top": 507.1000061035156
             },
             "post_job_actions": {
                 "ChangeDatatypeActionoutput": {
@@ -980,8 +985,8 @@
                 }
             ],
             "position": {
-                "left": 908.4666748046875,
-                "top": 370.7833251953125
+                "left": 881.5166015625,
+                "top": 358.1499938964844
             },
             "post_job_actions": {
                 "ChangeDatatypeActionrecovery_type": {
@@ -1016,6 +1021,6 @@
     "tags": [
         "IRIDA"
     ],
-    "uuid": "79d65a02-770b-4367-8b86-5bfabdd56067",
-    "version": 23
+    "uuid": "1d7ae823-facd-4e06-8203-e1c3e1a3b2ed",
+    "version": 26
 }
