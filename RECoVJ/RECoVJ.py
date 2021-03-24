@@ -10,9 +10,62 @@
 """
 
 import argparse
+import configparser
 import sys
 import os
 import json
+import mysql.connector
+from mysql.connector import errorcode
+
+TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def isNewLineage(inLineage):
+    isNew = False;
+    config = configparser.ConfigParser()
+    config.read(TOOL_DIR + '/../recovery.conf')
+    dbhost = config['db']['host']
+    dbdatabase = config['db']['database']
+    dbuser = config['db']['user']
+    dbpassword = config['db']['password']
+    config = {
+        'user': dbuser,
+        'password': dbpassword,
+        'host': dbhost,
+        'database': dbdatabase
+    }
+    sql = ("select * from v_sarscov2_lineages where Lineages = " + inLineage)
+    try:
+        cnx = mysql.connector.connect(**config)
+        cursor = cnx.cursor(buffered=True)
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        if result == None:
+            isNew = True
+        cursor.close()
+        return isNew
+    except mysql.connector.Error as err:
+        print(err)
+    else:
+        cnx.close()
+
+def isVOCLineage(inLineage):
+    isVOC = False
+    with open(TOOL_DIR + '/VOCLineages', 'r') as f:
+        vocs = f.read().splitlines()
+        for voc in vocs:
+            if voc == inLineage:
+                isVOC = True
+    return isVOC
+
+def isVOCSpike(inSpike):
+    isVOC = False
+    with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
+        vocs = f.read().splitlines()
+        for voc in vocs:
+            if inSpike in voc:
+                isVOC = True
+    return isVOC
+
 
 def colindex(gene):
     colindexes = {
@@ -73,6 +126,7 @@ def main():
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
+        lineage = tab_lineage[1][1]
         if tab_lineage[1][4] != 'passed_qc':
             if tab_lineage[1][5][:8] == 'seq_len:':
                 report_data["qc_status"] = 'ND'
@@ -108,6 +162,16 @@ def main():
         report_data["N-protein"] = format_variants(report_variants[9])
         report_data["ORF10"] = format_variants(report_variants[10])
         # report_data["Intergenic"] = format_variants(report_variants[11])
+        if isNewLineage(lineage):
+            report_data["VOC"] = "New"
+        else:
+            if isVOCLineage(lineage):
+                report_data["VOC"] = "Si"
+            else:
+                if isVOCSpike(report_data["S-protein"]):
+                    report_data["VOC"] = "Spike"
+                else:
+                    report_data["VOC"] = "No"
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
