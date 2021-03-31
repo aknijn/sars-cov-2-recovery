@@ -27,12 +27,20 @@
         #end if
         echo $library > $librarytype &&
         echo $strain > $strainname &&
+		touch $uploaded_fasta &&
+        #if str( $input_pc.forward.name ) == "dummy.fastq" and $library == "sang":
+		  cp '${input_pc.reverse}' $uploaded_fasta &&
+		#else:
+		  #if str( $input_pc.reverse.name ) == "dummy.fastq" and $library == "sang":
+            cp '${input_pc.forward}' $uploaded_fasta &&
+		  #end if
+		#end if
         python
           $__tool_directory__/RECoVG.py --library $library
           #if str( $input_pc.forward.name ) == "dummy.fastq":
-		    -1 ${input_pc.reverse} -2 ${input_pc.forward}
+		    -1 '${input_pc.reverse}' -2 '${input_pc.forward}'
 		  #else:
-            -1 ${input_pc.forward} -2 ${input_pc.reverse}
+            -1 '${input_pc.forward}' -2 '${input_pc.reverse}'
 		  #end if
           --covidref_aligned $covidref_aligned
 	      --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
@@ -59,5 +67,6 @@
 		<data name="reference_genbank" format="genbank" label="Reference GenBank file" />
 		<data name="reference_fasta" format="fasta" label="Reference fasta file" />
 		<data name="proteinentcovid19" format="fasta" label="ProteineNt_Covid19 fasta file" />
+		<data name="uploaded_fasta" format="fasta" label="Uploaded fasta file" />
     </outputs>
 </tool>

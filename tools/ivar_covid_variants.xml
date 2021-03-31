@@ -1,0 +1,35 @@
+<tool id="ivar_covid_variants" name="ivar covid variants" version="3.1+galaxy0">
+    <description>Call variants from aligned BAM file</description>
+    <requirements>
+      <requirement type="package" version="1.2">ivar</requirement>
+      <requirement type="package" version="1.9">samtools</requirement>
+      <yield />
+    </requirements>
+    <version_command>ivar version | grep version</version_command>
+    <command detect_errors="exit_code"><![CDATA[
+        #import subprocess
+        #set $library = $subprocess.getoutput('cat ' + str($librarytype))
+        ln -s '$ref' ref.fa &&
+        ln -s '$input_bam' sorted.bam &&
+        samtools mpileup -A -d 0 --reference ref.fa -B -Q 0 sorted.bam | ivar variants 
+        -p variants
+        -q 20
+        -t 0.5 &&
+        #if str( $library ) == "sang":
+		  mv variants.tsv $output_variants
+		#else:
+		  awk -F '\t' '$12>9 { print }' variants.tsv > $output_variants
+        #end if
+    ]]>    </command>
+    <inputs>
+        <param name="input_bam" type="data" format="bam" label="Bam file" help="Aligned reads, to trim primers and quality"/>
+        <param name="ref" type="data" format="fasta" label="Reference"/>
+        <param name="librarytype" type="data" format="txt" label="library type" />
+    </inputs>
+    <outputs>
+        <data name="output_variants" format="tabular" label="${tool.name} on ${on_string}" from_work_dir="variants.tsv"/>
+    </outputs>
+    <citations>
+      <citation type="doi">10.1186/s13059-018-1618-7</citation>
+    </citations>
+</tool>

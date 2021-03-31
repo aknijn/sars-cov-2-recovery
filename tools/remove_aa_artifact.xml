@@ -1,0 +1,15 @@
+<tool id="remove_aa_artifact" name="remove aa artifact" version="1.0">
+    <description>Transforms SNVs on the same codon in MNVs</description>
+    <command detect_errors="exit_code">
+<![CDATA[
+	awk -F '\t' '$6!="N" && $4!="N" { print }' $input_tab > clean_input_tab &&
+    python $__tool_directory__/remove_aa_artifact.py -i clean_input_tab -o $output_tab
+]]>
+    </command>
+    <inputs>
+        <param name="input_tab" type="data" format="tabular" label="variants file" />
+    </inputs>
+    <outputs>
+        <data name="output_tab" format="tabular" label="${tool.name} on ${on_string}" />
+    </outputs>
+</tool>

@@ -12,25 +12,19 @@
         #set $idname = $subprocess.getoutput('cat ' + str($strainname))
         #set $library = $subprocess.getoutput('cat ' + str($librarytype))
         #set $clean_name = re.sub('[^\w\-]', '_', str($idname))
-        ln -s '$input_bam' sorted.bam &&
-        samtools mpileup -A -d 0 -Q 0 sorted.bam | ivar consensus 
-        -p consensus
-        -t 0.6
-        -n N
         #if str( $library ) == "sang":
-          -q 1
-          -m 1
+            cp $uploaded_fasta consensus.fa
 		#else:
-          -q 20
-          -m 30
-        #end if
-        &&
-        sed -i "1s|.*|>$clean_name|" consensus.fa
+            ln -s '$input_bam' sorted.bam &&
+            samtools mpileup -A -d 0 -Q 0 sorted.bam | ivar consensus -p consensus -t 0.2 -n N -q 20 -m 30 &&
+            sed -i "1s|.*|>$clean_name|" consensus.fa
+        #end if    
     ]]>    </command>
     <inputs>
         <param name="input_bam" type="data" format="bam" label="Bam file" help="Aligned reads, to trim primers and quality"/>
         <param name="strainname" type="data" format="txt"  label="Set output FASTA ID with Strain name" />
         <param name="librarytype" type="data" format="txt" label="library type" />
+        <param name="uploaded_fasta" type="data" format="fasta" label="Uploaded fasta file" />
     </inputs>
     <outputs>
         <data name="consensus" format="fasta" label="${tool.name} on ${on_string} Consensus" from_work_dir="consensus.fa"/>
