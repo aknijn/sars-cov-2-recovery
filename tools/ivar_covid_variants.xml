@@ -15,7 +15,7 @@
         -p variants
         -q 20
         -t 0.5 &&
-        #if str( $library ) == "sang":
+        #if str( $library ) == "sang" or str( $library ) == "cons":
 		  mv variants.tsv $output_variants
 		#else:
 		  awk -F '\t' '$12>9 { print }' variants.tsv > $output_variants

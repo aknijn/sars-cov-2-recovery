@@ -11,10 +11,15 @@
     </stdio>
     <command>
 <![CDATA[
+    #import os
     #if $token == "D85SteptkQZ9MobOk9pa":
         #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
           #if str( $input_pc.forward.name ).endswith(".fasta") or str( $input_pc.reverse.name ).endswith(".fasta"):
-            #set $library = "sang"
+		    #if os.stat( str($input_pc.forward) ).st_size < 5120 and os.stat( str($input_pc.reverse) ).st_size < 5120:
+              #set $library = "sang"
+			#else:
+              #set $library = "cons"
+			#end if
           #else:
             #if str( $input_pc.forward.name ).endswith(".fast5") or str( $input_pc.reverse.name ).endswith(".fast5"):
               #set $library = "nano"
@@ -28,10 +33,10 @@
         echo $library > $librarytype &&
         echo $strain > $strainname &&
 		touch $uploaded_fasta &&
-        #if str( $input_pc.forward.name ) == "dummy.fastq" and $library == "sang":
+        #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).endswith(".fasta"):
 		  cp '${input_pc.reverse}' $uploaded_fasta &&
 		#else:
-		  #if str( $input_pc.reverse.name ) == "dummy.fastq" and $library == "sang":
+		  #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).endswith(".fasta"):
             cp '${input_pc.forward}' $uploaded_fasta &&
 		  #end if
 		#end if
@@ -52,10 +57,11 @@
         <param name="token" type="text" label="execution token" />
         <param name="strain" type="text" label="Set output FASTA ID with Strain name" />
         <param name="library" type="select" label="What kind of sequences are you using?">
-            <option value="iont">Ion torrent</option>
+            <option value="iont">Ion Torrent</option>
             <option value="illu">Illumina</option>
             <option value="nano">Nanopore</option>
-            <option value="nano">Sanger</option>
+            <option value="sang">Sanger</option>
+            <option value="cons">Consensus</option>
 		</param>
         <param name="input_pc" type="data_collection"  format="fastqsanger" collection_type="paired" label="Paired-end FASTQ collection" help="Must be of datatype &quot;fastqsanger&quot;" optional="false" />
 	</inputs>

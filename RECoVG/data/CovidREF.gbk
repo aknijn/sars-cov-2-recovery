@@ -2,7 +2,7 @@ LOCUS       NC_045512              29903 bp ss-RNA     linear   VRL 13-MAR-2020
 DEFINITION  Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1,
             complete genome.
 ACCESSION   NC_045512
-VERSION     NC_045512.2
+VERSION     NC_045512
 DBLINK      BioProject: PRJNA485481
 KEYWORDS    RefSeq.
 SOURCE      Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)
@@ -205,6 +205,8 @@ FEATURES             Location/Qualifiers
                      /gene="orf1ab nsp12"
      CDS             join(13442..13468,13468..16236)
                      /gene="orf1ab nsp12"
+                     /ribosomal_slippage
+                     /codon_start=1
                      /product="orf1ab nsp12"
                      /translation="SADAQSFLNRVCGVSAARLTPCGTGTSTDVVYRAFDIYNDKVAG
                      FAKFLKTNCCRFQEKDEDDNLIDSYFVVKRHTFSNYQHEETIYNLLKDCPAVAKHDFF

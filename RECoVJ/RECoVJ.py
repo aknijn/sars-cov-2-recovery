@@ -123,6 +123,17 @@ def main():
         report_data["information_name"] = args.strain
         report_data["region"] = args.region
         report_data["year"] = args.year
+        library = open(args.librarytype).readline().rstrip()
+        if library == 'iont':
+            report_data["sequence"] = "Ion Torrent"
+        elif library == 'illu':
+            report_data["sequence"] = "Illumina"
+        elif library == 'nano':
+            report_data["sequence"] = "Nanopore"
+        elif library == 'sang':
+            report_data["sequence"] = "Sanger"
+        elif library == 'cons':
+            report_data["sequence"] = "Consensus"
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
@@ -136,7 +147,7 @@ def main():
             report_data["qc_status"] = 'Passed'
         with open(args.variants) as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
-        if open(args.librarytype).readline().rstrip() == 'sang':
+        if library == 'sang':
             strDefault = "ND"
         else:
             strDefault = "="

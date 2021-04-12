@@ -56,16 +56,15 @@ def __main__():
     # Sanger
     elif args.library=='sang':
         # ALIGN SARS-COV-2 GENOME
-        if os.stat(args.input1).st_size < 5120:
-            # SPIKE
-            subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome_Spike' -f -U '" + args.input1 + "' --very-sensitive | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
-        else:
-            # CONSENSUS
-            subprocess.call("minimap2 -t ${GALAXY_SLOTS:-4} " + TOOL_DIR + "/data/genome.fa '" + args.input1 + "' -a | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
+        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome_Spike' -f -U '" + args.input1 + "' --very-sensitive | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
+    # Consensus
+    elif args.library=='cons':
+        # ALIGN SARS-COV-2 GENOME
+        subprocess.call("minimap2 -t ${GALAXY_SLOTS:-4} " + TOOL_DIR + "/data/genome.fa '" + args.input1 + "' -a | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
            
 
     # COPY CORRESPONDING REFERENCE
-    if args.library=='sang' and os.stat(args.input1).st_size < 5120:
+    if args.library=='sang':
         shutil.copy(TOOL_DIR + "/data/CovidREF_Spike.gbk", args.reference_genbank)
         shutil.copy(TOOL_DIR + "/data/genome_Spike.fa", args.reference_fasta)
     else:

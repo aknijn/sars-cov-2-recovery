@@ -12,8 +12,8 @@
         #set $idname = $subprocess.getoutput('cat ' + str($strainname))
         #set $library = $subprocess.getoutput('cat ' + str($librarytype))
         #set $clean_name = re.sub('[^\w\-]', '_', str($idname))
-        #if str( $library ) == "sang":
-            cp $uploaded_fasta consensus.fa
+        #if str( $library ) == "sang" or str( $library ) == "cons":
+            cat $uploaded_fasta > consensus.fa &&
 		#else:
             ln -s '$input_bam' sorted.bam &&
             samtools mpileup -A -d 0 -Q 0 sorted.bam | ivar consensus -p consensus -t 0.2 -n N -q 20 -m 30 &&
