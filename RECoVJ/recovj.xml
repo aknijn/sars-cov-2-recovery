@@ -15,7 +15,7 @@
 			$__tool_directory__/RECoVJ.py
 			--strain $strain --librarytype $librarytype
 			--region $region --year $year
-			--lineage $lineage --variants $variants
+			--lineage $lineage --variants $variants --consensus $consensus
 			--recovery_json $recovery_type
         #else
             touch $recovery_type
@@ -31,6 +31,7 @@
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="lineage" format="csv" type="data" label="lineage" />
         <param name="variants" format="tab" type="data" label="variants" />
+        <param name="consensus" format="fasta" type="data" label="consensus fasta file" />
    </inputs>
 
     <outputs>

@@ -62,6 +62,8 @@ def isVOCSpike(inSpike):
     with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
         vocs = f.read().splitlines()
         for voc in vocs:
+            if voc[-1] == '*' and inSpike[:-1] in voc[:-1]:
+                isVOC = True
             if inSpike in voc:
                 isVOC = True
     return isVOC
@@ -113,6 +115,7 @@ def main():
     parser.add_argument('--year', dest='year', help='year')
     parser.add_argument('--lineage', dest='lineage', help='lineage')
     parser.add_argument('--variants', dest='variants', help='variants')
+    parser.add_argument('--consensus', dest='consensus', help='consensus')
     parser.add_argument('--recovery_json', dest='recovery_json', help='recovery_json')
     
     args = parser.parse_args()
@@ -123,6 +126,7 @@ def main():
         report_data["information_name"] = args.strain
         report_data["region"] = args.region
         report_data["year"] = args.year
+        # library type
         library = open(args.librarytype).readline().rstrip()
         if library == 'iont':
             report_data["sequence"] = "Ion Torrent"
@@ -134,6 +138,7 @@ def main():
             report_data["sequence"] = "Sanger"
         elif library == 'cons':
             report_data["sequence"] = "Consensus"
+        # obtain quality control from pangolin
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
@@ -145,6 +150,7 @@ def main():
                 report_data["qc_status"] = 'Failed'
         else:
             report_data["qc_status"] = 'Passed'
+        # variants
         with open(args.variants) as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
         if library == 'sang':
@@ -160,7 +166,6 @@ def main():
                     report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "_del; "
                 else:
                     report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "; "
-                # report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[1] + ":" + variant[2] + "/" + variant[3] + ";"
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])
         report_data["ORF3a"] = format_variants(report_variants[2])
@@ -172,7 +177,13 @@ def main():
         report_data["ORF8"] = format_variants(report_variants[8])
         report_data["N-protein"] = format_variants(report_variants[9])
         report_data["ORF10"] = format_variants(report_variants[10])
-        # report_data["Intergenic"] = format_variants(report_variants[11])
+        # Ns in consensus
+        with open(args.consensus) as cons_in:
+            next(cons_in)
+            consensus = next(cons_in)
+            perc = (100.0 * consensus.count('N')) / (len(consensus))
+        report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(perc) + "%)"
+        # VOC
         if isNewLineage(lineage):
             report_data["VOC"] = "New"
         else:

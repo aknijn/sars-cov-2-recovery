@@ -13,6 +13,9 @@
         ln -s '$input_bam' sorted.bam &&
         samtools mpileup -A -d 0 --reference ref.fa -B -Q 0 sorted.bam | ivar variants 
         -p variants
+        #if str( $library ) == "iont" or str( $library ) == "illu" or str( $library ) == "nano":
+		  -m 30
+        #end if		
         -q 20
         -t 0.5 &&
         #if str( $library ) == "sang" or str( $library ) == "cons":

@@ -25,7 +25,7 @@ def getAABase(AA):
     for x in AA:
         if x.isdigit():
             AABase+=x
-    return int(AABase)
+    return AABase
 
 def __main__():
     parser = argparse.ArgumentParser()
@@ -36,92 +36,80 @@ def __main__():
     csv_file = open(args.intab)
     read_csv = list(csv.reader(csv_file, delimiter="\t"))
     out_file = open(args.outtab,'w')
-    out_file.write('\t'.join(read_csv[0])+'\n')
-
-    read_csv2=[]
-    read_csv2.append(read_csv[0])
-    ff=1
-    while ff<len(read_csv[:-1]):
-        if read_csv[ff][7]=='':
-            read_csv2.append(read_csv[ff])
-            ff += 1
-        if read_csv[ff][7] != '' and read_csv[ff-1][7]=='':
-            read_csv2.append(read_csv[ff])
-            ff += 1
-        if read_csv[ff-1][5].find('DELETION')!=-1:
-            n1 = getAABase(read_csv[ff][7])
-            n2 = getAABase(read_csv[ff - 1][7])
-            if n1==n2:
-                ff+=1
-            else:
-                read_csv2.append(read_csv[ff])
-                ff+=1
-        else:
-            read_csv2.append(read_csv[ff])
-            ff+=1
-    read_csv2.append(read_csv[ff])
-
-    index=1
-    while index<len(read_csv2[:-1]):
-        aa=read_csv2[index][7][:-1]
-        codone=[]
-        riga=''
-        non_trovato=0
-
-        if aa==read_csv2[index+1][7][:-1]:
-            codone.append(read_csv2[index])
-            codone.append(read_csv2[index+1])
-            index += 1
-            non_trovato+=1
-        if aa==read_csv2[index+1][7][:-1]:
-            codone.append(read_csv2[index+1])
-            index += 1
-            non_trovato+=1
-        if non_trovato==0:
-            out_file.write('\t'.join(read_csv2[index])+'\n')
-        if non_trovato==1:
-            riga += codone[0][0] + '\t' + codone[0][1]+ '\t'
-            cod=[]
-            cod1=''
-            cod2=''
-            codon=''
-            for x in range(len(codone)):
-                cod.append(codone[x][6])
-            for x in range(0, 7):
-                if x<3:
-                    if cod[0][x].isupper() and cod[1][x].islower():
-                        codon+=cod[0][x]
-                        cod1+=cod[0][x]
-                    if cod[0][x].islower() and cod[1][x].isupper():
-                        codon+=cod[1][x]
-                        cod1+=cod[1][x]
-                    if cod[0][x].islower() and cod[1][x].islower():
-                        codon += cod[0][x]
-                if x>3:
-                    if cod[0][x].isupper() and cod[1][x].islower():
-                        codon+=cod[0][x]
-                        cod2+=cod[0][x]
-                    if cod[0][x].islower() and cod[1][x].isupper():
-                        codon+=cod[1][x]
-                        cod2+=cod[1][x]
-                    if cod[0][x].islower() and cod[1][x].islower():
-                        codon += cod[0][x]
-                if x==3:
-                    codon+='/'
-            mutations=''
-            if gencode.get(codon[0:-4].upper())==gencode.get(codon[4:].upper()):
-                mutations+='SYNONYMOUS_CODING'
-            else:
-                mutations+='NON_SYNONYMOUS_CODING'
-            riga+=cod1+'\t'+cod2+'\t'+codone[0][0]+'\t'+mutations+'\t'+codon+'\t'+gencode.get(codon[0:-4].upper())+codone[0][7][1:-1]+gencode.get(codon[4:].upper())+'\n'
-            out_file.write(riga)
-        if non_trovato==2:
-            newcodon=codone[0][6][4]+codone[1][6][5]+codone[2][6][6]
-            riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][6][0:3].upper()+'\t'+newcodon+'\t'+codone[0][0]+'\t'+codone[0][5]+'\t'+read_csv2[index][6][0:3].upper()+'/'+newcodon+'\t'+codone[0][7][:-1]+gencode.get(newcodon)+'\n'
-            out_file.write(riga)
-        index+=1
-    if len(read_csv) > 0:
-        out_file.write('\t'.join(read_csv[len(read_csv)-1])+'\n')
+    if len(read_csv)>1:
+        out_file.write('\t'.join(read_csv[0])+'\n')
+        index=1
+        while index<len(read_csv[:-1]):
+            aa=getAABase(read_csv[index][7])
+            codone=[]
+            riga=''
+            non_trovato=0
+            ultimo_dafare=True
+    
+            if 'FRAME_SHIFT' not in read_csv[index][5]:
+                if '?' not in read_csv[index][7] and '*' not in read_csv[index][7]:
+                    if '?' not in read_csv[index+1][7] and '*' not in read_csv[index+1][7]:
+                        if aa==getAABase(read_csv[index+1][7]) and aa!='' and read_csv[index][0]==read_csv[index+1][0]:
+                            codone.append(read_csv[index])
+                            codone.append(read_csv[index+1])
+                            index += 1
+                            non_trovato+=1
+                            if not index<len(read_csv[:-1]):
+                                ultimo_dafare=False
+                    if '?' not in read_csv[index + 1][7] and '*' not in read_csv[index + 1][7]:
+                        if aa==getAABase(read_csv[index+1][7]) and aa!='' and read_csv[index][0]==read_csv[index+1][0]:
+                            codone.append(read_csv[index+1])
+                            index += 1
+                            non_trovato+=1
+                            if not index<len(read_csv[:-1]):
+                                ultimo_dafare=False
+            if non_trovato==0:
+                out_file.write('\t'.join(read_csv[index])+'\n')
+            if non_trovato==1:
+                riga += codone[0][0] + '\t' + codone[0][1]+ '\t'
+                cod=[]
+                cod1=''
+                cod2=''
+                codon=''
+                for x in range(len(codone)):
+                    cod.append(codone[x][6])
+                for x in range(0, 7):
+                    if x<3:
+                        if cod[0][x].isupper() and cod[1][x].islower():
+                            codon+=cod[0][x]
+                            cod1+=cod[0][x]
+                        if cod[0][x].islower() and cod[1][x].isupper():
+                            codon+=cod[1][x]
+                            cod1+=cod[1][x]
+                        if cod[0][x].islower() and cod[1][x].islower():
+                            codon += cod[0][x]
+                    if x>3:
+                        if cod[0][x].isupper() and cod[1][x].islower():
+                            codon+=cod[0][x]
+                            cod2+=cod[0][x]
+                        if cod[0][x].islower() and cod[1][x].isupper():
+                            codon+=cod[1][x]
+                            cod2+=cod[1][x]
+                        if cod[0][x].islower() and cod[1][x].islower():
+                            codon += cod[0][x]
+                    if x==3:
+                        codon+='/'
+                mutations=''
+                if gencode.get(codon[0:-4].upper())==gencode.get(codon[4:].upper()):
+                    mutations+='SYNONYMOUS_CODING'
+                else:
+                    mutations+='NON_SYNONYMOUS_CODING'
+                riga+=cod1+'\t'+cod2+'\t'+codone[0][0]+'\t'+mutations+'\t'+codon+'\t'+gencode.get(codon[0:-4].upper())+aa+gencode.get(codon[4:].upper())+'\n'
+                out_file.write(riga)
+            if non_trovato==2:
+                newcodon=codone[0][6][4]+codone[1][6][5]+codone[2][6][6]
+                riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv[index][6][0:3].upper()+'\t'+newcodon+'\t'+codone[0][0]+'\t'+codone[0][5]+'\t'+read_csv[index][6][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv[index][6][0:3].upper())+aa+gencode.get(newcodon)+'\n'
+                out_file.write(riga)
+            index+=1
+        if ultimo_dafare:
+            out_file.write('\t'.join(read_csv[len(read_csv)-1])+'\n')
+    else:
+        out_file.write('error: no variants detected\n')
     out_file.close
 
 if __name__ == "__main__":

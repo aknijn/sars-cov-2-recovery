@@ -2,6 +2,7 @@
     <description>Only to be used through IRIDA</description>
     <requirements>
         <requirement type="package" version="3.7">python</requirement>
+        <requirement type="package" version="0.2.4">porechop</requirement>
         <requirement type="package" version="0.39">trimmomatic</requirement>
         <requirement type="package" version="2.3.4">bowtie2</requirement>
         <requirement type="package" version="2.17">minimap2</requirement>
@@ -12,7 +13,8 @@
     <command>
 <![CDATA[
     #import os
-    #if $token == "D85SteptkQZ9MobOk9pa":
+    #import subprocess
+	#if $token == "D85SteptkQZ9MobOk9pa":
         #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
           #if str( $input_pc.forward.name ).endswith(".fasta") or str( $input_pc.reverse.name ).endswith(".fasta"):
 		    #if os.stat( str($input_pc.forward) ).st_size < 5120 and os.stat( str($input_pc.reverse) ).st_size < 5120:
@@ -24,7 +26,16 @@
             #if str( $input_pc.forward.name ).endswith(".fast5") or str( $input_pc.reverse.name ).endswith(".fast5"):
               #set $library = "nano"
             #else:
-              #set $library = "iont"
+			  #if str( $input_pc.reverse.name ) == "dummy.fastq":
+                #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.forward) + ' | wc -L')
+			  #else:
+                #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.reverse) + ' | wc -L')
+			  #end if
+			  #if int($seqlen) > 800:
+                #set $library = "nano"
+			  #else:
+                #set $library = "iont"
+			  #end if
             #end if
           #end if
         #else:

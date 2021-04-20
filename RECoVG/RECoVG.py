@@ -47,6 +47,11 @@ def __main__():
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome' -1 filtered.1.fq -2 filtered.2.fq --very-sensitive-local | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
     # Nanopore
     elif args.library=='nano':
+        if args.input1.endswith(".fast5"):
+            os.system("ln -s " + args.input1 + " chopped.fq")
+        else:
+            # PORECHOP
+            subprocess.call("porechop -i '" + args.input1 + "' --format 'fastq' -o 'chopped.fq'", shell=True)
         # TRIMMING
         subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar SE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' trimmed1.fq LEADING:9 TRAILING:9 MINLEN:30", shell=True)
         # FILTER HUMAN GENOME
