@@ -14,10 +14,10 @@
             python 
 			$__tool_directory__/RECoVJ.py
 			--strain $strain --librarytype $librarytype
-			--region $region --year $year
+			--region '$region' --year $year
 			--lineage $lineage --variants $variants --consensus $consensus
 			--recovery_json $recovery_type
-        #else
+        #else:
             touch $recovery_type
         #end if  
 ]]>

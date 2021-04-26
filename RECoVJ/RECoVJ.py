@@ -59,13 +59,14 @@ def isVOCLineage(inLineage):
 
 def isVOCSpike(inSpike):
     isVOC = False
-    with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
-        vocs = f.read().splitlines()
-        for voc in vocs:
-            if voc[-1] == '*' and inSpike[:-1] in voc[:-1]:
-                isVOC = True
-            if inSpike in voc:
-                isVOC = True
+    if inSpike != '=' and inSpike != 'ND':
+        with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
+            vocs = f.read().splitlines()
+            for voc in vocs:
+                if voc[-1] == 'X' and inSpike[:-1] in voc[:-1]:
+                    isVOC = True
+                if inSpike in voc:
+                    isVOC = True
     return isVOC
 
 
@@ -138,6 +139,12 @@ def main():
             report_data["sequence"] = "Sanger"
         elif library == 'cons':
             report_data["sequence"] = "Consensus"
+        # Ns in consensus
+        with open(args.consensus) as cons_in:
+            next(cons_in)
+            consensus = next(cons_in)
+        perc = (100.0 * consensus.count('N')) / (len(consensus))
+        report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(perc) + "%)"
         # obtain quality control from pangolin
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
@@ -149,7 +156,10 @@ def main():
             else:
                 report_data["qc_status"] = 'Failed'
         else:
-            report_data["qc_status"] = 'Passed'
+            if perc > 10.0:
+                report_data["qc_status"] = 'Failed'
+            else:
+                report_data["qc_status"] = 'Passed'
         # variants
         with open(args.variants) as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
@@ -177,12 +187,6 @@ def main():
         report_data["ORF8"] = format_variants(report_variants[8])
         report_data["N-protein"] = format_variants(report_variants[9])
         report_data["ORF10"] = format_variants(report_variants[10])
-        # Ns in consensus
-        with open(args.consensus) as cons_in:
-            next(cons_in)
-            consensus = next(cons_in)
-            perc = (100.0 * consensus.count('N')) / (len(consensus))
-        report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(perc) + "%)"
         # VOC
         if isNewLineage(lineage):
             report_data["VOC"] = "New"

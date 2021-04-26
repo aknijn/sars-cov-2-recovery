@@ -31,6 +31,7 @@ def __main__():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_out_file', dest='intab', help='input_out_file')
     parser.add_argument('-o', '--output_out_file', dest='outtab', help='output_out_file')
+    parser.add_argument('--minmax', dest='minmax', help='minority or majority variants')
     args = parser.parse_args()
 
     csv_file = open(args.intab)
@@ -44,9 +45,8 @@ def __main__():
             codone=[]
             riga=''
             non_trovato=0
-            ultimo_dafare=True
     
-            if 'FRAME_SHIFT' not in read_csv[index][5]:
+            if read_csv[index][5]!='FRAME_SHIFT' and read_csv[index][5]!='CODON_CHANGE_PLUS_CODON_DELETION':
                 if '?' not in read_csv[index][7] and '*' not in read_csv[index][7]:
                     if '?' not in read_csv[index+1][7] and '*' not in read_csv[index+1][7]:
                         if aa==getAABase(read_csv[index+1][7]) and aa!='' and read_csv[index][0]==read_csv[index+1][0]:
@@ -54,17 +54,19 @@ def __main__():
                             codone.append(read_csv[index+1])
                             index += 1
                             non_trovato+=1
-                            if not index<len(read_csv[:-1]):
-                                ultimo_dafare=False
                     if '?' not in read_csv[index + 1][7] and '*' not in read_csv[index + 1][7]:
                         if aa==getAABase(read_csv[index+1][7]) and aa!='' and read_csv[index][0]==read_csv[index+1][0]:
                             codone.append(read_csv[index+1])
                             index += 1
                             non_trovato+=1
-                            if not index<len(read_csv[:-1]):
-                                ultimo_dafare=False
             if non_trovato==0:
-                out_file.write('\t'.join(read_csv[index])+'\n')
+                l=len(read_csv[index][2])-1
+                if args.minmax == 'max':
+                    out_file.write('\t'.join(read_csv[index])+'\n')
+                elif read_csv[index][5].find('FRAME_SHIFT')!=0:
+                    out_file.write('\t'.join(read_csv[index]) + '\n')
+                elif l%3==0 and l>=3:
+                    out_file.write('\t'.join(read_csv[index]) + '\n')       
             if non_trovato==1:
                 riga += codone[0][0] + '\t' + codone[0][1]+ '\t'
                 cod=[]
@@ -106,8 +108,7 @@ def __main__():
                 riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv[index][6][0:3].upper()+'\t'+newcodon+'\t'+codone[0][0]+'\t'+codone[0][5]+'\t'+read_csv[index][6][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv[index][6][0:3].upper())+aa+gencode.get(newcodon)+'\n'
                 out_file.write(riga)
             index+=1
-        if ultimo_dafare:
-            out_file.write('\t'.join(read_csv[len(read_csv)-1])+'\n')
+        out_file.write('\t'.join(read_csv[len(read_csv)-1])+'\n')
     else:
         out_file.write('error: no variants detected\n')
     out_file.close

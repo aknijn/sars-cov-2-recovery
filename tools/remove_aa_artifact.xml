@@ -2,11 +2,11 @@
     <description>Transforms SNVs on the same codon in MNVs</description>
     <command detect_errors="exit_code">
 <![CDATA[
-	awk -F '\t' '$6!="N" && $4!="N" && $1!="" { print }' $input_tab > clean_input_tab &&
-    python $__tool_directory__/remove_aa_artifact.py -i clean_input_tab -o $output_tab
+    python $__tool_directory__/remove_aa_artifact.py -i $input_tab -o $output_tab --minmax $minmax
 ]]>
     </command>
     <inputs>
+        <param name="minmax" type="text" label="minority (min) or majority (max) variants" />
         <param name="input_tab" type="data" format="tabular" label="variants file" />
     </inputs>
     <outputs>
