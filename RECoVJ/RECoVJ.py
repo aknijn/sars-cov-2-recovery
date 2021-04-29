@@ -33,7 +33,7 @@ def isNewLineage(inLineage):
         'host': dbhost,
         'database': dbdatabase
     }
-    sql = ("select * from v_sarscov2_lineages where Lineages = " + inLineage)
+    sql = ("select * from v_sarscov2_lineages where Lineages = '" + inLineage + "'")
     try:
         cnx = mysql.connector.connect(**config)
         cursor = cnx.cursor(buffered=True)
@@ -156,7 +156,7 @@ def main():
             else:
                 report_data["qc_status"] = 'Failed'
         else:
-            if perc > 10.0:
+            if perc > 5.0:
                 report_data["qc_status"] = 'Failed'
             else:
                 report_data["qc_status"] = 'Passed'
@@ -171,11 +171,11 @@ def main():
             report_variants.append(strDefault)
         report_variants[1] = "="
         for variant in tab_variants:
-            if variant[1] != 'POS' and colindex(variant[0]) != 11 and variant[7] != 'S':
+            if variant[1] != 'POS' and colindex(variant[0]) != 11 and variant[6] != 'S':
                 if "DELETION" in variant[5]:
-                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "_del; "
+                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
                 else:
-                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[7] + "; "
+                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])
         report_data["ORF3a"] = format_variants(report_variants[2])

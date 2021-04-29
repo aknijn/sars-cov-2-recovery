@@ -41,10 +41,10 @@ def main():
         read_csv = list(csv.reader(spike, delimiter="\t"))
     spike_mut=[]
     for l in read_csv[1:]:
-        if l[7].find(getAABase(l[7]))==1:
-            spike_mut.append(l[7][1:])
+        if l[6].find(getAABase(l[6]))==1:
+            spike_mut.append(l[6][1:])
         else:
-            spike_mut.append(l[7])
+            spike_mut.append(l[6])
     
     spike_mut_set=set(spike_mut)
     intersection={}
@@ -68,7 +68,7 @@ def main():
     elif len(best_matches) > 1 and "B.1" in best_matches:
         best_matches.remove("B.1")
     report = open(args.lineage, 'w')
-    report.write("taxon,lineage,probability,-,status,note\n")
+    report.write("taxon,lineage,conflict,-,status,note\n")
     report.write(args.strain + ",(*)" + ";".join(best_matches) + ",ND,-,seq_len:,(*) lineage non può essere con certezza ottenuto da sequenza Sanger")
     report.close()
 
