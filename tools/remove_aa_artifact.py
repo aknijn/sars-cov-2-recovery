@@ -41,11 +41,10 @@ def __main__():
     read_csv2=[]
     read_csv2.append(['Gene', 'Position', 'Reference', 'Alternative', 'Mutation type', 'Codon change', 'Amino Acid Effect'])
     for line in read_csv[1:]:
-        if line[5]!='N':
+        if len(line)<=8:
             del line[4]
             read_csv2.append(line)
-    
-    
+
     if len(read_csv2)>1:
         out_file.write('\t'.join(read_csv2[0])+'\n')
         index=1
@@ -54,20 +53,21 @@ def __main__():
             codone=[]
             riga=''
             non_trovato=0
-    
-            if read_csv2[index][4]!='FRAME_SHIFT' and read_csv2[index][4]!='CODON_CHANGE_PLUS_CODON_DELETION':
-                if '?' not in read_csv2[index][6] and '*' not in read_csv2[index][6]:
-                    if '?' not in read_csv2[index+1][6] and '*' not in read_csv2[index+1][6]:
-                        if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
-                            codone.append(read_csv2[index])
-                            codone.append(read_csv2[index+1])
-                            index += 1
-                            non_trovato+=1
-                    if '?' not in read_csv2[index + 1][6] and '*' not in read_csv2[index + 1][6]:
-                        if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
-                            codone.append(read_csv2[index+1])
-                            index += 1
-                            non_trovato+=1
+            if read_csv2[index][1]!=read_csv2[index+1][1]:
+                if read_csv2[index][4]!='FRAME_SHIFT' and read_csv2[index][4]!='CODON_CHANGE_PLUS_CODON_DELETION':
+                    if '?' not in read_csv2[index][6] and '*' not in read_csv2[index][6]:
+                        if '?' not in read_csv2[index+1][6] and '*' not in read_csv2[index+1][6]:
+                            if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
+                                codone.append(read_csv2[index])
+                                codone.append(read_csv2[index+1])
+                                index += 1
+                                non_trovato+=1
+                        if read_csv2[index][1]!=read_csv2[index+1][1]:
+                            if '?' not in read_csv2[index + 1][6] and '*' not in read_csv2[index + 1][6]:
+                                if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
+                                    codone.append(read_csv2[index+1])
+                                    index += 1
+                                    non_trovato+=1
             if non_trovato==0:
                 l=len(read_csv2[index][2])-1
                 if args.minmax == 'max':
@@ -93,7 +93,7 @@ def __main__():
                             codon+=cod[1][x]
                             cod1+=cod[1][x]
                         if cod[0][x].islower() and cod[1][x].islower():
-                            codon += cod[0][x]
+                            codon+=cod[0][x]
                     if x>3:
                         if cod[0][x].isupper() and cod[1][x].islower():
                             codon+=cod[0][x]
@@ -102,7 +102,7 @@ def __main__():
                             codon+=cod[1][x]
                             cod2+=cod[1][x]
                         if cod[0][x].islower() and cod[1][x].islower():
-                            codon += cod[0][x]
+                            codon+=cod[0][x]
                     if x==3:
                         codon+='/'
                 mutations=''
@@ -110,11 +110,16 @@ def __main__():
                     mutations+='SYNONYMOUS_CODING'
                 else:
                     mutations+='NON_SYNONYMOUS_CODING'
-                riga+=cod1+'\t'+cod2+'\t'+codone[0][0]+'\t'+mutations+'\t'+codon+'\t'+gencode.get(codon[0:-4].upper())+aa+gencode.get(codon[4:].upper())+'\n'
+                riga+=cod1+'\t'+cod2+'\t'+mutations+'\t'+codon+'\t'+gencode.get(codon[0:-4].upper())+aa+gencode.get(codon[4:].upper())+'\n'
                 out_file.write(riga)
             if non_trovato==2:
+                mutations=''
                 newcodon=codone[0][5][4]+codone[1][5][5]+codone[2][5][6]
-                riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][5][0:3].upper()+'\t'+newcodon+'\t'+codone[0][0]+'\t'+codone[0][5]+'\t'+read_csv2[index][5][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv2[index][5][0:3].upper())+aa+gencode.get(newcodon)+'\n'
+                if gencode.get(read_csv2[index][5][0:3].upper())==gencode.get(newcodon):
+                    mutations += 'SYNONYMOUS_CODING'
+                else:
+                    mutations += 'NON_SYNONYMOUS_CODING'
+                riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][5][0:3].upper()+'\t'+newcodon+'\t'+mutations+'\t'+read_csv2[index][5][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv2[index][5][0:3].upper())+aa+gencode.get(newcodon)+'\n'
                 out_file.write(riga)
             index+=1
         out_file.write('\t'.join(read_csv2[len(read_csv2)-1])+'\n')
