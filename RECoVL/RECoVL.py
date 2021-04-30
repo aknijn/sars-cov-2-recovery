@@ -68,8 +68,8 @@ def main():
     elif len(best_matches) > 1 and "B.1" in best_matches:
         best_matches.remove("B.1")
     report = open(args.lineage, 'w')
-    report.write("taxon,lineage,conflict,-,status,note\n")
-    report.write(args.strain + ",(*)" + ";".join(best_matches) + ",ND,-,seq_len:,(*) lineage non può essere con certezza ottenuto da sequenza Sanger")
+    report.write("taxon,lineage,conflict,-,-,status,note\n")
+    report.write(args.strain + ",(*)" + ";".join(best_matches) + ",ND,-,-,seq_len:,(*) lineage non può essere con certezza ottenuto da sequenza Sanger")
     report.close()
 
 if __name__ == "__main__":

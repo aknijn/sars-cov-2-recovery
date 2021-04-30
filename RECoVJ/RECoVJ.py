@@ -150,8 +150,8 @@ def main():
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
         lineage = tab_lineage[1][1]
-        if tab_lineage[1][4] != 'passed_qc':
-            if tab_lineage[1][5][:8] == 'seq_len:':
+        if tab_lineage[1][5] != 'passed_qc':
+            if tab_lineage[1][6][:8] == 'seq_len:':
                 report_data["qc_status"] = 'ND'
             else:
                 report_data["qc_status"] = 'Failed'
@@ -171,8 +171,8 @@ def main():
             report_variants.append(strDefault)
         report_variants[1] = "="
         for variant in tab_variants:
-            if variant[1] != 'POS' and colindex(variant[0]) != 11 and variant[6] != 'S':
-                if "DELETION" in variant[5]:
+            if variant[1] != 'Position' and colindex(variant[0]) != 11 and variant[6] != 'S':
+                if "DELETION" in variant[4]:
                     report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
                 else:
                     report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
