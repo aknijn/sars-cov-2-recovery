@@ -1,5 +1,5 @@
 <tool id="recovl" name="RECoVL" version="3.1">
-    <description>Only to be used through IRIDA</description>
+    <description>Try to obtain a lineage from the consensus</description>
     <requirements>
         <requirement type="package" version="3.7">python</requirement>
         <requirement type="package" version="2">pangolin</requirement>
@@ -11,21 +11,16 @@
     <command>
 <![CDATA[
     #import subprocess
-    #if $token == "D85SteptkQZ9MobOk9pa":
-        #set $library = $subprocess.getoutput('cat ' + str($librarytype))
-        #if $library == "sang":
-            python 
-		    $__tool_directory__/RECoVL.py --variants $variants --strain $strain --lineage $lineage
-		#else:
-            pangolin --min-length 10000 $consensus --outfile $lineage
-        #end if  
+    #set $library = $subprocess.getoutput('cat ' + str($librarytype))
+    #if $library == "sang":
+      python 
+      $__tool_directory__/RECoVL.py --variants $variants --strain $strain --lineage $lineage
     #else:
-        touch $lineage
+      pangolin --min-length 10000 $consensus --outfile $lineage
     #end if  
 ]]>
     </command>
     <inputs>
-        <param name="token" type="text" label="execution token" />
         <param name="strain" type="text" label="name" />
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="consensus" format="fasta" type="data" label="consensus fasta file" />
@@ -33,6 +28,6 @@
     </inputs>
 
     <outputs>
-		<data format="csv" name="lineage" label="${tool.name} on ${on_string}" />
+        <data format="csv" name="lineage" label="${tool.name} on ${on_string}" />
    </outputs>
 </tool>

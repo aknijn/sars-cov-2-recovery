@@ -6,20 +6,22 @@
       <yield />
     </requirements>
     <version_command>ivar version | grep version</version_command>
-    <command detect_errors="exit_code"><![CDATA[
-        #import re
-        #import subprocess
-        #set $idname = $subprocess.getoutput('cat ' + str($strainname))
-        #set $library = $subprocess.getoutput('cat ' + str($librarytype))
-        #set $clean_name = re.sub('[^\w\-]', '_', str($idname))
-        #if str( $library ) == "sang" or str( $library ) == "cons":
-            cat $uploaded_fasta > consensus.fa &&
-		#else:
-            ln -s '$input_bam' sorted.bam &&
-            samtools mpileup -A -d 0 -Q 0 sorted.bam | ivar consensus -p consensus -t 0.2 -n N -q 20 -m 30 &&
-        #end if    
-        sed -i "1s|.*|>$clean_name|" consensus.fa
-    ]]>    </command>
+    <command detect_errors="exit_code">
+<![CDATA[
+    #import re
+    #import subprocess
+    #set $idname = $subprocess.getoutput('cat ' + str($strainname))
+    #set $library = $subprocess.getoutput('cat ' + str($librarytype))
+    #set $clean_name = re.sub('[^\w\-]', '_', str($idname))
+    #if str( $library ) == "sang" or str( $library ) == "cons":
+      cat $uploaded_fasta > consensus.fa &&
+    #else:
+      ln -s '$input_bam' sorted.bam &&
+      samtools mpileup -A -d 0 -Q 0 sorted.bam | ivar consensus -p consensus -t 0.2 -n N -q 20 -m 30 &&
+    #end if    
+    sed -i "1s|.*|>$clean_name|" consensus.fa
+ ]]>
+    </command>
     <inputs>
         <param name="input_bam" type="data" format="bam" label="Bam file" help="Aligned reads, to trim primers and quality"/>
         <param name="strainname" type="data" format="txt"  label="Set output FASTA ID with Strain name" />
