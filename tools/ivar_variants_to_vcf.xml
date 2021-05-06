@@ -1,0 +1,17 @@
+<tool id="ivar_variants_to_vcf" name="iVar Variants to VCF" version="0.1.0">
+    <description>Convert iVar tabular variant output to .vcf format</description>
+    <requirements />
+    <command detect_errors="exit_code"><![CDATA[
+        '$__tool_directory__/ivar_variants_to_vcf.py'
+        -ma '${min_allele_freq}'
+        ${input}
+        ${output}
+    ]]></command>
+    <inputs>
+        <param name="input" type="data" format="tabular" />
+        <param name="min_allele_freq" type="float" min="0.0" value="0.0" max="1.0" />
+    </inputs>
+    <outputs>
+        <data name="output" label="Variants (VCF)" format="vcf" />
+    </outputs>
+</tool>

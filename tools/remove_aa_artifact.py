@@ -54,7 +54,7 @@ def __main__():
             riga=''
             non_trovato=0
             if read_csv2[index][1]!=read_csv2[index+1][1]:
-                if read_csv2[index][4]!='FRAME_SHIFT' and read_csv2[index][4]!='CODON_CHANGE_PLUS_CODON_DELETION':
+                if read_csv2[index][4]!='FRAME_SHIFT' and read_csv2[index][4].find('DELETION')==-1 and read_csv2[index+1][4]!='FRAME_SHIFT' and read_csv2[index+1][4].find('DELETION')==-1:
                     if '?' not in read_csv2[index][6] and '*' not in read_csv2[index][6]:
                         if '?' not in read_csv2[index+1][6] and '*' not in read_csv2[index+1][6]:
                             if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
@@ -63,11 +63,12 @@ def __main__():
                                 index += 1
                                 non_trovato+=1
                         if read_csv2[index][1]!=read_csv2[index+1][1]:
-                            if '?' not in read_csv2[index + 1][6] and '*' not in read_csv2[index + 1][6]:
-                                if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
-                                    codone.append(read_csv2[index+1])
-                                    index += 1
-                                    non_trovato+=1
+                            if read_csv2[index][4] != 'FRAME_SHIFT' and read_csv2[index][4].find('DELETION') == -1 and read_csv2[index + 1][4] != 'FRAME_SHIFT' and read_csv2[index + 1][4].find('DELETION') == -1:
+                                if '?' not in read_csv2[index + 1][6] and '*' not in read_csv2[index + 1][6]:
+                                    if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
+                                        codone.append(read_csv2[index+1])
+                                        index += 1
+                                        non_trovato+=1
             if non_trovato==0:
                 l=len(read_csv2[index][2])-1
                 if args.minmax == 'max':

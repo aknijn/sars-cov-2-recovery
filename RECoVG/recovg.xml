@@ -17,7 +17,7 @@
 	#if $token == "D85SteptkQZ9MobOk9pa":
         #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
           #if str( $input_pc.forward.name ).endswith(".fasta") or str( $input_pc.reverse.name ).endswith(".fasta"):
-		    #if os.stat( str($input_pc.forward) ).st_size < 5120 and os.stat( str($input_pc.reverse) ).st_size < 5120:
+		    #if os.stat( str($input_pc.forward) ).st_size < 6000 and os.stat( str($input_pc.reverse) ).st_size < 6000:
               #set $library = "sang"
 			#else:
               #set $library = "cons"

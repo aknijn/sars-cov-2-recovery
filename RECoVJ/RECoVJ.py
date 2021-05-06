@@ -21,40 +21,46 @@ TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def isNewLineage(inLineage):
     isNew = False;
-    config = configparser.ConfigParser()
-    config.read(TOOL_DIR + '/../recovery.conf')
-    dbhost = config['db']['host']
-    dbdatabase = config['db']['database']
-    dbuser = config['db']['user']
-    dbpassword = config['db']['password']
-    config = {
-        'user': dbuser,
-        'password': dbpassword,
-        'host': dbhost,
-        'database': dbdatabase
-    }
-    sql = ("select * from v_sarscov2_lineages where Lineages = '" + inLineage + "'")
-    try:
-        cnx = mysql.connector.connect(**config)
-        cursor = cnx.cursor(buffered=True)
-        cursor.execute(sql)
-        result = cursor.fetchone()
-        if result == None:
-            isNew = True
-        cursor.close()
-        return isNew
-    except mysql.connector.Error as err:
-        print(err)
-    else:
-        cnx.close()
+    if not '*' in inLineage:
+        config = configparser.ConfigParser()
+        config.read(TOOL_DIR + '/../recovery.conf')
+        dbhost = config['db']['host']
+        dbdatabase = config['db']['database']
+        dbuser = config['db']['user']
+        dbpassword = config['db']['password']
+        config = {
+            'user': dbuser,
+            'password': dbpassword,
+            'host': dbhost,
+            'database': dbdatabase
+        }
+        sql = ("select * from v_sarscov2_lineages where Lineages = '" + inLineage + "'")
+        try:
+            cnx = mysql.connector.connect(**config)
+            cursor = cnx.cursor(buffered=True)
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            if result == None:
+                isNew = True
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(err)
+        else:
+            cnx.close()
+    return isNew
 
 def isVOCLineage(inLineage):
     isVOC = False
     with open(TOOL_DIR + '/VOCLineages', 'r') as f:
         vocs = f.read().splitlines()
         for voc in vocs:
-            if voc == inLineage:
-                isVOC = True
+            if '+' in voc:
+                linspike = voc.split('+')
+                if linspike[0] == inLineage and isVOCSpike(linspike[1]):
+                    isVOC = True
+            else:
+                if voc == inLineage:
+                    isVOC = True
     return isVOC
 
 def isVOCSpike(inSpike):
@@ -68,7 +74,6 @@ def isVOCSpike(inSpike):
                 if inSpike in voc:
                     isVOC = True
     return isVOC
-
 
 def colindex(gene):
     colindexes = {
@@ -150,8 +155,8 @@ def main():
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
         lineage = tab_lineage[1][1]
-        if tab_lineage[1][5] != 'passed_qc':
-            if tab_lineage[1][6][:8] == 'seq_len:':
+        if tab_lineage[1][len(tab_lineage)-2] != 'passed_qc':
+            if tab_lineage[1][len(tab_lineage)-1][:8] == 'seq_len:':
                 report_data["qc_status"] = 'ND'
             else:
                 report_data["qc_status"] = 'Failed'
@@ -171,11 +176,12 @@ def main():
             report_variants.append(strDefault)
         report_variants[1] = "="
         for variant in tab_variants:
-            if variant[1] != 'Position' and colindex(variant[0]) != 11 and variant[6] != 'S':
-                if "DELETION" in variant[4]:
-                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
-                else:
-                    report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
+            if len(variant)>1:
+                if variant[1] != 'Position' and colindex(variant[0]) != 11 and variant[6] != 'S':
+                    if "DELETION" in variant[4]:
+                        report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
+                    else:
+                        report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])
         report_data["ORF3a"] = format_variants(report_variants[2])
