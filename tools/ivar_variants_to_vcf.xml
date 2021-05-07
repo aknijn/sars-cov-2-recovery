@@ -3,7 +3,7 @@
     <requirements />
     <command detect_errors="exit_code">
 <![CDATA[
-    '$__tool_directory__/ivar_variants_to_vcf.py'
+    python $__tool_directory__/ivar_variants_to_vcf.py
       -ma '${min_allele_freq}'
       ${input}
       ${output}

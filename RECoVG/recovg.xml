@@ -1,4 +1,4 @@
-<tool id="recovg" name="RECoVG" version="3.1">
+<tool id="recovg" name="RECoVG" version="3.2">
     <description>Determine input library type and trim, filter and align accordingly</description>
     <requirements>
         <requirement type="package" version="3.7">python</requirement>
@@ -51,7 +51,7 @@
       #end if
     #end if
 	
-	#if (not ($library = "iont" and (str($input_pc.forward.name).find("_R1_")!=-1) or str($input_pc.forward.name).find("_R2_")!=-1) or (str($input_pc.reverse.name).find("_R1_")!=-1) or (str($input_pc.reverse.name).find("_R2_")!=-1))):
+	#if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1) or str($input_pc.forward.name).find("_R2_")!=-1) or (str($input_pc.reverse.name).find("_R1_")!=-1) or (str($input_pc.reverse.name).find("_R2_")!=-1)):
      python
         $__tool_directory__/RECoVG.py --library $library
         #if str( $input_pc.forward.name ) == "dummy.fastq":

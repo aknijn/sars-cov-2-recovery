@@ -1,4 +1,4 @@
-<tool id="remove_aa_artifact" name="remove aa artifact" version="1.0">
+<tool id="remove_aa_artifact" name="remove aa artifact" version="3.2">
     <description>Transforms SNVs on the same codon in MNVs</description>
     <command detect_errors="exit_code">
 <![CDATA[
