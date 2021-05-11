@@ -25,7 +25,7 @@
         <param name="year" type="text" label="Sample Year" />
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="lineage" format="csv" type="data" label="lineage" />
-        <param name="variants" format="tab" type="data" label="variants" />
+        <param name="variants" format="tabular" type="data" label="variants" />
         <param name="consensus" format="fasta" type="data" label="consensus fasta file" />
    </inputs>
 

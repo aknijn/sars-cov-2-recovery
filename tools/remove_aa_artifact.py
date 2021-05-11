@@ -20,6 +20,14 @@ gencode = {
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W'}
 
+def finding_errors(err):
+    success='NOT_SUCCESS'
+    errors={'FRAME_SHIFT','CHROMOSOME_LARGE_DELETION','CODON_CHANGE','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION','CODON_DELETION','CODON_CHANGE_PLUS_CODON_DELETION','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION','STOP_GAINED', '?', '*', 'STOP_GAINED'}
+    for c in errors:
+        if err.find(c)!=-1:
+            success = 'SUCCESS'
+    return success
+
 def getAABase(AA):
     AABase=''
     for x in AA:
@@ -54,17 +62,16 @@ def __main__():
             riga=''
             non_trovato=0
             if read_csv2[index][1]!=read_csv2[index+1][1]:
-                if read_csv2[index][4]!='FRAME_SHIFT' and read_csv2[index][4].find('DELETION')==-1 and read_csv2[index+1][4]!='FRAME_SHIFT' and read_csv2[index+1][4].find('DELETION')==-1:
-                    if '?' not in read_csv2[index][6] and '*' not in read_csv2[index][6]:
-                        if '?' not in read_csv2[index+1][6] and '*' not in read_csv2[index+1][6]:
-                            if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
-                                codone.append(read_csv2[index])
-                                codone.append(read_csv2[index+1])
-                                index += 1
-                                non_trovato+=1
+                if finding_errors(read_csv2[index][4])=='NOT_SUCCESS' and finding_errors(read_csv2[index+1][4])=='NOT_SUCCESS':
+                    if finding_errors(read_csv2[index][6])=='NOT_SUCCESS' and finding_errors(read_csv2[index+1][6])=='NOT_SUCCESS':
+                        if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
+                            codone.append(read_csv2[index])
+                            codone.append(read_csv2[index+1])
+                            index += 1
+                            non_trovato+=1
                         if read_csv2[index][1]!=read_csv2[index+1][1]:
-                            if read_csv2[index][4] != 'FRAME_SHIFT' and read_csv2[index][4].find('DELETION') == -1 and read_csv2[index + 1][4] != 'FRAME_SHIFT' and read_csv2[index + 1][4].find('DELETION') == -1:
-                                if '?' not in read_csv2[index + 1][6] and '*' not in read_csv2[index + 1][6]:
+                            if finding_errors(read_csv2[index][4]) == 'NOT_SUCCESS' and finding_errors(read_csv2[index + 1][4]) == 'NOT_SUCCESS':
+                                if finding_errors(read_csv2[index][6]) == 'NOT_SUCCESS' and finding_errors(read_csv2[index + 1][6]) == 'NOT_SUCCESS':
                                     if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
                                         codone.append(read_csv2[index+1])
                                         index += 1

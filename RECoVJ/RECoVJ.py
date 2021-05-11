@@ -155,8 +155,8 @@ def main():
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
         lineage = tab_lineage[1][1]
-        if tab_lineage[1][len(tab_lineage)-2] != 'passed_qc':
-            if tab_lineage[1][len(tab_lineage)-1][:8] == 'seq_len:':
+        if tab_lineage[1][len(tab_lineage[1])-2] != 'passed_qc':
+            if tab_lineage[1][len(tab_lineage[1])-1][:8] == 'seq_len:':
                 report_data["qc_status"] = 'ND'
             else:
                 report_data["qc_status"] = 'Failed'
