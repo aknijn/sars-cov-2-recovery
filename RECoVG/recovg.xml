@@ -51,8 +51,8 @@
       #end if
     #end if
 	
-	#if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1) or str($input_pc.forward.name).find("_R2_")!=-1) or (str($input_pc.reverse.name).find("_R1_")!=-1) or (str($input_pc.reverse.name).find("_R2_")!=-1)):
-     python
+	#if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1 or str($input_pc.forward.name).find("_R2_")!=-1)) or ($library == "iont" and (str($input_pc.reverse.name).find("_R1_")!=-1 or str($input_pc.reverse.name).find("_R2_")!=-1))):
+      python
         $__tool_directory__/RECoVG.py --library $library
         #if str( $input_pc.forward.name ) == "dummy.fastq":
           -1 '${input_pc.reverse}' -2 '${input_pc.forward}'

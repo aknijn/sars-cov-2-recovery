@@ -49,30 +49,46 @@ def isNewLineage(inLineage):
             cnx.close()
     return isNew
 
-def isVOCLineage(inLineage):
+def isVOCLineage(inLineage, inSpike):
     isVOC = False
     with open(TOOL_DIR + '/VOCLineages', 'r') as f:
         vocs = f.read().splitlines()
         for voc in vocs:
             if '+' in voc:
+                print("LIN: " + inLineage + " voc: " + voc)
                 linspike = voc.split('+')
-                if linspike[0] == inLineage and isVOCSpike(linspike[1]):
+                print("lin: " + linspike[0] + " spike: " + linspike[1])
+                if linspike[0] == inLineage and isVOCLineageSpike(linspike[1], inSpike):
                     isVOC = True
             else:
                 if voc == inLineage:
                     isVOC = True
     return isVOC
 
-def isVOCSpike(inSpike):
+def isVOCLineageSpike(inSpikes, vocSpike):
     isVOC = False
-    if inSpike != '=' and inSpike != 'ND':
+    if inSpikes != '=' and inSpikes != 'ND':
+        with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
+            lstSpikes = inSpikes.split('; ')
+            for inSpike in lstSpikes:
+                if vocSpike[-1] == 'X' and inSpike[:-1] in vocSpike[:-1]:
+                    isVOC = True
+                if inSpike in vocSpike:
+                    isVOC = True
+    return isVOC
+
+def isVOCSpike(inSpikes):
+    isVOC = False
+    if inSpikes != '=' and inSpikes != 'ND':
         with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
             vocs = f.read().splitlines()
-            for voc in vocs:
-                if voc[-1] == 'X' and inSpike[:-1] in voc[:-1]:
-                    isVOC = True
-                if inSpike in voc:
-                    isVOC = True
+            lstSpikes = inSpikes.split('; ')
+            for inSpike in lstSpikes:
+                for voc in vocs:
+                    if voc[-1] == 'X' and inSpike[:-1] in voc[:-1]:
+                        isVOC = True
+                    if inSpike in voc:
+                        isVOC = True
     return isVOC
 
 def colindex(gene):
@@ -146,8 +162,8 @@ def main():
             report_data["sequence"] = "Consensus"
         # Ns in consensus
         with open(args.consensus) as cons_in:
-            next(cons_in)
-            consensus = next(cons_in)
+            temp = cons_in.read().splitlines()
+            consensus="".join(temp[1:])
         perc = (100.0 * consensus.count('N')) / (len(consensus))
         report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(perc) + "%)"
         # obtain quality control from pangolin
@@ -156,7 +172,7 @@ def main():
         report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
         lineage = tab_lineage[1][1]
         if tab_lineage[1][len(tab_lineage[1])-2] != 'passed_qc':
-            if tab_lineage[1][len(tab_lineage[1])-1][:8] == 'seq_len:':
+            if tab_lineage[1][len(tab_lineage[1])-2][:8] == 'seq_len:':
                 report_data["qc_status"] = 'ND'
             else:
                 report_data["qc_status"] = 'Failed'
@@ -197,7 +213,7 @@ def main():
         if isNewLineage(lineage):
             report_data["VOC"] = "New"
         else:
-            if isVOCLineage(lineage):
+            if isVOCLineage(lineage, report_data["S-protein"]):
                 report_data["VOC"] = "Si"
             else:
                 if isVOCSpike(report_data["S-protein"]):
