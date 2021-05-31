@@ -1,8 +1,7 @@
 <tool id="recovl" name="RECoVL" version="3.2">
     <description>Try to obtain a lineage from the consensus</description>
     <requirements>
-        <requirement type="package" version="3.7">python</requirement>
-        <requirement type="package" version="2">pangolin</requirement>
+        <requirement type="package" version="3">pangolin</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
