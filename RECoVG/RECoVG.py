@@ -34,7 +34,7 @@ def __main__():
         # TRIMMING
         subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar SE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' trimmed1.fq LEADING:15 TRAILING:15 MINLEN:30 SLIDINGWINDOW:4:15", shell=True)
         # FILTER HUMAN GENOME
-        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '/ariesdb/database/covid19/Humangenome' -U trimmed1.fq --un filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
+        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/Humangenome' -U trimmed1.fq --un filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
         # ALIGN SARS-COV-2 GENOME
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome' -U filtered.fq --very-sensitive-local | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
     # Illumina
@@ -42,7 +42,7 @@ def __main__():
         # TRIMMING
         subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar PE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' '" + args.input2 + "' trimmed1.fq fastq_out_r1_unpaired trimmed2.fq fastq_out_r2_unpaired LEADING:15 TRAILING:15 MINLEN:30 SLIDINGWINDOW:4:15", shell=True)
          # FILTER HUMAN GENOME
-        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '/ariesdb/database/covid19/Humangenome' -1 trimmed1.fq -2 trimmed2.fq --un-conc filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
+        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/Humangenome' -1 trimmed1.fq -2 trimmed2.fq --un-conc filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
         # ALIGN SARS-COV-2 GENOME
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome' -1 filtered.1.fq -2 filtered.2.fq --very-sensitive-local | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
     # Nanopore
@@ -55,7 +55,7 @@ def __main__():
         # TRIMMING
         subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar SE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' trimmed1.fq LEADING:9 TRAILING:9 MINLEN:30", shell=True)
         # FILTER HUMAN GENOME
-        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '/ariesdb/database/covid19/Humangenome' -U trimmed1.fq --un filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
+        subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/Humangenome' -U trimmed1.fq --un filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
         # ALIGN SARS-COV-2 GENOME
         subprocess.call("minimap2 -t ${GALAXY_SLOTS:-4} " + TOOL_DIR + "/data/genome.fa filtered.fq -a | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
     # Sanger
