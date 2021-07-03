@@ -20,12 +20,20 @@ gencode = {
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W'}
 
-def finding_errors(err):
+def finding_errors(positions):
     success='NOT_SUCCESS'
     errors={'FRAME_SHIFT','CHROMOSOME_LARGE_DELETION','CODON_CHANGE','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION','CODON_DELETION','CODON_CHANGE_PLUS_CODON_DELETION','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION','STOP_GAINED', '?', '*', 'STOP_GAINED'}
-    for c in errors:
-        if err.find(c)!=-1:
-            success = 'SUCCESS'
+    degeneration={"R","D","M","N","S","K","W","H","B","V","Y","N"}
+    for error in errors:
+        for p in positions:
+            if p.find(error)!=-1:
+                success = 'SUCCESS'
+                return success
+    for deg in degeneration:
+        for p in positions:
+            if p==deg:
+                success = 'SUCCESS'
+                return success
     return success
 
 def getAABase(AA):
@@ -49,7 +57,7 @@ def __main__():
     read_csv2=[]
     read_csv2.append(['Gene', 'Position', 'Reference', 'Alternative', 'Mutation type', 'Codon change', 'Amino Acid Effect'])
     for line in read_csv[1:]:
-        if len(line)<=8:
+        if len(line)<=8 and line[3]!='N':
             del line[4]
             read_csv2.append(line)
 
@@ -62,25 +70,26 @@ def __main__():
             riga=''
             non_trovato=0
             if read_csv2[index][1]!=read_csv2[index+1][1]:
+                position = [read_csv2[index][3], read_csv2[index][4], read_csv2[index][6], read_csv2[index + 1][3], read_csv2[index + 1][4], read_csv2[index + 1][6]]
                 if finding_errors(read_csv2[index][4])=='NOT_SUCCESS' and finding_errors(read_csv2[index+1][4])=='NOT_SUCCESS':
-                    if finding_errors(read_csv2[index][6])=='NOT_SUCCESS' and finding_errors(read_csv2[index+1][6])=='NOT_SUCCESS':
+                    if finding_errors(position)=='NOT_SUCCESS':
                         if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
                             codone.append(read_csv2[index])
                             codone.append(read_csv2[index+1])
                             index += 1
                             non_trovato+=1
                         if read_csv2[index][1]!=read_csv2[index+1][1]:
-                            if finding_errors(read_csv2[index][4]) == 'NOT_SUCCESS' and finding_errors(read_csv2[index + 1][4]) == 'NOT_SUCCESS':
-                                if finding_errors(read_csv2[index][6]) == 'NOT_SUCCESS' and finding_errors(read_csv2[index + 1][6]) == 'NOT_SUCCESS':
-                                    if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
-                                        codone.append(read_csv2[index+1])
-                                        index += 1
-                                        non_trovato+=1
+                            position = [read_csv2[index][3], read_csv2[index][4], read_csv2[index][6], read_csv2[index + 1][3], read_csv2[index + 1][4], read_csv2[index + 1][6]]
+                            if finding_errors(position) == 'NOT_SUCCESS':
+                                if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
+                                    codone.append(read_csv2[index+1])
+                                    index += 1
+                                    non_trovato+=1
             if non_trovato==0:
                 l=len(read_csv2[index][2])-1
                 if args.minmax == 'max':
                     out_file.write('\t'.join(read_csv2[index])+'\n')
-                elif read_csv2[index][4].find('FRAME_SHIFT')!=0:
+                elif read_csv2[index][4].find('FRAME_SHIFT')==-1:
                     out_file.write('\t'.join(read_csv2[index]) + '\n')
                 elif l%3==0 and l>=3:
                     out_file.write('\t'.join(read_csv2[index]) + '\n')       
@@ -116,9 +125,10 @@ def __main__():
                 mutations=''
                 if gencode.get(codon[0:-4].upper())==gencode.get(codon[4:].upper()):
                     mutations+='SYNONYMOUS_CODING'
+                    riga += cod1 + '\t' + cod2 + '\t' + mutations + '\t' + codon + '\t' + gencode.get(codon[0:-4].upper()) + str(aa) + '\n'
                 else:
                     mutations+='NON_SYNONYMOUS_CODING'
-                riga+=cod1+'\t'+cod2+'\t'+mutations+'\t'+codon+'\t'+gencode.get(codon[0:-4].upper())+aa+gencode.get(codon[4:].upper())+'\n'
+                    riga += cod1 + '\t' + cod2 + '\t' + mutations + '\t' + codon + '\t' + gencode.get(codon[0:-4].upper()) + str(aa) + gencode.get(codon[4:].upper()) + '\n'
                 out_file.write(riga)
             if non_trovato==2:
                 mutations=''
@@ -130,7 +140,8 @@ def __main__():
                 riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][5][0:3].upper()+'\t'+newcodon+'\t'+mutations+'\t'+read_csv2[index][5][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv2[index][5][0:3].upper())+aa+gencode.get(newcodon)+'\n'
                 out_file.write(riga)
             index+=1
-        out_file.write('\t'.join(read_csv2[len(read_csv2)-1])+'\n')
+        if read_csv2[len(read_csv2)-1][4].find('FRAME_SHIFT')==-1:
+            out_file.write('\t'.join(read_csv2[len(read_csv2)-1])+'\n')
     else:
         out_file.write('error: no variants detected\n')
     out_file.close

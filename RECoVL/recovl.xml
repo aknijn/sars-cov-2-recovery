@@ -12,8 +12,7 @@
     #import subprocess
     #set $library = $subprocess.getoutput('cat ' + str($librarytype))
     #if $library == "sang":
-      python 
-      $__tool_directory__/RECoVL.py --variants $variants --strain $strain --lineage $lineage
+      pangolin --min-length 1000 $consensus --outfile $lineage
     #else:
       pangolin --min-length 10000 $consensus --outfile $lineage
     #end if  

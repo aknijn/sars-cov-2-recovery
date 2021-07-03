@@ -1,0 +1,29 @@
+<tool id="remove_nucleotide_deletions" name="remove nucleotide deletions" version="3.3">
+    <description>Removes deletions/insertions caused by homopolymers and NGS errors</description>
+    <requirements>
+      <requirement type="package" version="1.79">biopython</requirement>
+      <requirement type="package" version="7.480">mafft</requirement>
+      <yield />
+    </requirements>
+    <command detect_errors="exit_code">
+<![CDATA[
+    python $__tool_directory__/remove_nucleotide_deletions.py 
+	  --first_consensus $first_consensus
+	  --reference_fasta $reference_fasta
+	  --minority_variants $minority_variants
+	  --majority_variants $majority_variants
+]]>
+    </command>
+    <inputs>
+        <param name="first_consensus" type="data" format="fasta" label="first consensus file" />
+		<param name="reference_fasta" type="data" format="fasta" label="Reference fasta file" />
+		<param name="minority_variants" type="data" format="tabular" label="minority variants" />
+		<param name="majority_variants" type="data" format="tabular" label="majority variants" />
+    </inputs>
+    <outputs>
+        <data name="consensus" format="fasta" label="Final consensus" from_work_dir="consensus.fasta" />
+    </outputs>
+</tool>
+
+
+
