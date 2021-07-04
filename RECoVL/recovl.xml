@@ -1,7 +1,7 @@
-<tool id="recovl" name="RECoVL" version="3.2">
-    <description>Try to obtain a lineage from the consensus</description>
+<tool id="recovl" name="RECoVL" version="3.4">
+    <description>Try to obtain a lineage from the consensus using pangolin</description>
     <requirements>
-        <requirement type="package" version="3">pangolin</requirement>
+        <requirement type="package">pangolin</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -19,10 +19,8 @@
 ]]>
     </command>
     <inputs>
-        <param name="strain" type="text" label="name" />
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="consensus" format="fasta" type="data" label="consensus fasta file" />
-        <param name="variants" format="tabular" type="data" label="variants tabular file" />
     </inputs>
 
     <outputs>

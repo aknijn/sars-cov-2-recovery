@@ -1,4 +1,4 @@
-<tool id="recovj" name="RECoVJ" version="3.2">
+<tool id="recovj" name="RECoVJ" version="3.4">
     <description>Collect all results and elaborate them in a json file</description>
     <requirements>
         <requirement type="package" version="3.7">python</requirement>
@@ -14,7 +14,7 @@
       $__tool_directory__/RECoVJ.py
       --strain $strain --librarytype $librarytype
       --region '$region' --year $year
-      --lineage $lineage --variants $variants --consensus $consensus
+      --lineage $lineage --clade $clade --variants $variants --consensus $consensus
       --recovery_json $recovery_type
 ]]>
     </command>
@@ -25,6 +25,7 @@
         <param name="year" type="text" label="Sample Year" />
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="lineage" format="csv" type="data" label="lineage" />
+        <param name="clade" format="tsv" type="data" label="clade" />
         <param name="variants" format="tabular" type="data" label="variants" />
         <param name="consensus" format="fasta" type="data" label="consensus fasta file" />
    </inputs>

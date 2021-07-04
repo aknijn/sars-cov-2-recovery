@@ -49,47 +49,53 @@ def isNewLineage(inLineage):
             cnx.close()
     return isNew
 
-def isVOCLineage(inLineage, inSpike):
-    isVOC = False
-    with open(TOOL_DIR + '/VOCLineages', 'r') as f:
+def getTypeLineage(inLineage, inSpike):
+    typeLineage = "-"
+    isVUM = isTypeLineage(inLineage, inSpike, "VUM")
+    if isVUM == 1:
+        typeLineage = "VUM"
+    if isVUM == 2:
+        typeLineage = "VUM*"
+    isVOI = isTypeLineage(inLineage, inSpike, "VOI")
+    if isVOI == 1:
+        typeLineage = "VOI"
+    if isVOI == 2:
+        typeLineage = "VOI*"
+    isVOC = isTypeLineage(inLineage, inSpike, "VOC")
+    if isVOC == 1:
+        typeLineage = "VOC"
+    if isVOC == 2:
+        typeLineage = "VOC*"
+    return typeLineage
+
+def isNotificaLineage(inLineage, inSpike):
+    return isTypeLineage(inLineage, inSpike, "EW") > 0
+
+def isTypeLineage(inLineage, inSpike, inType):
+    isType = 0
+    with open(TOOL_DIR + '/Lineages-' + inType, 'r') as f:
         vocs = f.read().splitlines()
         for voc in vocs:
             if '+' in voc:
-                print("LIN: " + inLineage + " voc: " + voc)
                 linspike = voc.split('+')
-                print("lin: " + linspike[0] + " spike: " + linspike[1])
-                if linspike[0] == inLineage and isVOCLineageSpike(linspike[1], inSpike):
-                    isVOC = True
+                if linspike[0] == inLineage and isTypeLineageSpike(linspike[1], inSpike, inType):
+                    isType = 2
             else:
                 if voc == inLineage:
-                    isVOC = True
-    return isVOC
+                    isType = 1
+    return isType
 
-def isVOCLineageSpike(inSpikes, vocSpike):
-    isVOC = False
+def isTypeLineageSpike(vocSpike, inSpikes):
+    isType = False
     if inSpikes != '=' and inSpikes != 'ND':
-        with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
+        with open(TOOL_DIR + '/Spikes-' + inType, 'r') as f:
             lstSpikes = inSpikes.split('; ')
             for inSpike in lstSpikes:
                 if vocSpike[-1] == 'X' and inSpike[:-1] in vocSpike[:-1]:
-                    isVOC = True
+                    isType = True
                 if inSpike in vocSpike:
-                    isVOC = True
-    return isVOC
-
-def isVOCSpike(inSpikes):
-    isVOC = False
-    if inSpikes != '=' and inSpikes != 'ND':
-        with open(TOOL_DIR + '/VOCSpikes', 'r') as f:
-            vocs = f.read().splitlines()
-            lstSpikes = inSpikes.split('; ')
-            for inSpike in lstSpikes:
-                for voc in vocs:
-                    if voc[-1] == 'X' and inSpike[:-1] in voc[:-1]:
-                        isVOC = True
-                    if inSpike in voc:
-                        isVOC = True
-    return isVOC
+                    isType = True
+    return isType
 
 def colindex(gene):
     colindexes = {
@@ -136,6 +142,7 @@ def main():
     parser.add_argument('--region', dest='region', help='region')
     parser.add_argument('--year', dest='year', help='year')
     parser.add_argument('--lineage', dest='lineage', help='lineage')
+    parser.add_argument('--clade', dest='clade', help='clade')
     parser.add_argument('--variants', dest='variants', help='variants')
     parser.add_argument('--consensus', dest='consensus', help='consensus')
     parser.add_argument('--recovery_json', dest='recovery_json', help='recovery_json')
@@ -164,23 +171,24 @@ def main():
         with open(args.consensus) as cons_in:
             temp = cons_in.read().splitlines()
             consensus="".join(temp[1:])
-        perc = (100.0 * consensus.count('N')) / (len(consensus))
-        report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(perc) + "%)"
-        # obtain quality control from pangolin
+        percN = (100.0 * consensus.count('N')) / (len(consensus))
+        report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(percN) + "%)"
+        # obtain lineage and quality control from pangolin result and from Ns in consensus
         with open(args.lineage) as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
-        report_data["lineage"] = tab_lineage[1][1] + " (" + tab_lineage[1][2] + ")"
+        report_data["lineage"] = tab_lineage[1][1]
         lineage = tab_lineage[1][1]
         if tab_lineage[1][len(tab_lineage[1])-2] != 'passed_qc':
-            if tab_lineage[1][len(tab_lineage[1])-2][:8] == 'seq_len:':
-                report_data["qc_status"] = 'ND'
-            else:
-                report_data["qc_status"] = 'Failed'
+            report_data["qc_status"] = 'Failed'
         else:
-            if perc > 5.0:
+            if percN > 5.0:
                 report_data["qc_status"] = 'Failed'
             else:
                 report_data["qc_status"] = 'Passed'
+        # obtain clade from nextclade result
+        with open(args.clade) as table_in:
+            tab_clade = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
+        report_data["clade"] = tab_clade[1][1].strip('\"')
         # variants
         with open(args.variants) as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
@@ -211,15 +219,12 @@ def main():
         report_data["ORF10"] = format_variants(report_variants[10])
         # VOC
         if isNewLineage(lineage):
-            report_data["VOC"] = "New"
+            report_data["notifica"] = "New"
         else:
-            if isVOCLineage(lineage, report_data["S-protein"]):
-                report_data["VOC"] = "Si"
-            else:
-                if isVOCSpike(report_data["S-protein"]):
-                    report_data["VOC"] = "Spike"
-                else:
-                    report_data["VOC"] = "No"
+            report_data["notifica"] = "-"
+        if isNotificaLineage(lineage, report_data["S-protein"]):
+            report_data["notifica"] = "Si"
+        report_data["VOC"] = getTypeLineage(lineage, report_data["S-protein"])
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
