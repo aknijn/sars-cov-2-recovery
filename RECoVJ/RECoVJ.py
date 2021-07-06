@@ -85,7 +85,7 @@ def isTypeLineage(inLineage, inSpike, inType):
                     isType = 1
     return isType
 
-def isTypeLineageSpike(vocSpike, inSpikes):
+def isTypeLineageSpike(vocSpike, inSpikes, inType):
     isType = False
     if inSpikes != '=' and inSpikes != 'ND':
         with open(TOOL_DIR + '/Spikes-' + inType, 'r') as f:
