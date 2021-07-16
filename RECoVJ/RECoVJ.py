@@ -49,53 +49,44 @@ def isNewLineage(inLineage):
             cnx.close()
     return isNew
 
-def getTypeLineage(inLineage, inSpike):
-    typeLineage = "-"
-    isVUM = isTypeLineage(inLineage, inSpike, "VUM")
-    if isVUM == 1:
-        typeLineage = "VUM"
-    if isVUM == 2:
-        typeLineage = "VUM*"
-    isVOI = isTypeLineage(inLineage, inSpike, "VOI")
-    if isVOI == 1:
-        typeLineage = "VOI"
-    if isVOI == 2:
-        typeLineage = "VOI*"
-    isVOC = isTypeLineage(inLineage, inSpike, "VOC")
-    if isVOC == 1:
-        typeLineage = "VOC"
-    if isVOC == 2:
-        typeLineage = "VOC*"
-    return typeLineage
+def isNotificaVariant(inLineage, inSpike):
+    isNotifica = False
+    with open(TOOL_DIR + '/Variants-EW', 'r') as f:
+        variants = f.read().splitlines()
+    for variant in variants:
+        if '+' in variant:
+            lineage_spike = variant.split('+')
+            if (lineage_spike[0] == inLineage) and (lineage_spike[1] in inSpike):
+                isNotifica = True
+                break
+        else:
+            if variant == inLineage:
+                isNotifica = True
+                break
+    return isNotifica
 
-def isNotificaLineage(inLineage, inSpike):
-    return isTypeLineage(inLineage, inSpike, "EW") > 0
+def getVariant(inLineage, inClade, inSpike):
+    typeVariant = '-'
+    typeVariant = getVariant_Lineage_Clade(inLineage, inSpike, 'Lineages')
+    if typeVariant == '-':
+        typeVariant = getVariant_Lineage_Clade(inClade, inSpike, 'Clades')
+    return typeVariant
 
-def isTypeLineage(inLineage, inSpike, inType):
-    isType = 0
-    with open(TOOL_DIR + '/Lineages-' + inType, 'r') as f:
-        vocs = f.read().splitlines()
-        for voc in vocs:
-            if '+' in voc:
-                linspike = voc.split('+')
-                if linspike[0] == inLineage and isTypeLineageSpike(linspike[1], inSpike, inType):
-                    isType = 2
-            else:
-                if voc == inLineage:
-                    isType = 1
-    return isType
-
-def isTypeLineageSpike(vocSpike, inSpikes, inType):
-    isType = False
-    if inSpikes != '=' and inSpikes != 'ND':
-        with open(TOOL_DIR + '/Spikes-' + inType, 'r') as f:
-            lstSpikes = inSpikes.split('; ')
-            for inSpike in lstSpikes:
-                if vocSpike[-1] == 'X' and inSpike[:-1] in vocSpike[:-1]:
-                    isType = True
-                if inSpike in vocSpike:
-                    isType = True
-    return isType
+def getVariant_Lineage_Clade(inLineage_Clade, inSpike, inType):
+    outVariant = '-'
+    with open(TOOL_DIR + '/Variants-' + inType, 'r') as f:
+        lines = f.read().splitlines()
+    for line in lines:
+        relations = line.split('\t')
+        if relations[1] == '*':
+            if relations[0] == inLineage_Clade:
+                outVariant = relations[2]
+                break
+        else:
+            if relations[0] == inLineage_Clade and (relations[1] in inSpike):
+                outVariant = relations[2]
+                break
+    return outVariant
 
 def colindex(gene):
     colindexes = {
@@ -141,11 +132,11 @@ def main():
     parser.add_argument('--librarytype', dest='librarytype', help='library type')
     parser.add_argument('--region', dest='region', help='region')
     parser.add_argument('--year', dest='year', help='year')
-    parser.add_argument('--lineage', dest='lineage', help='lineage')
-    parser.add_argument('--clade', dest='clade', help='clade')
-    parser.add_argument('--variants', dest='variants', help='variants')
+    parser.add_argument('--lineage', dest='lineage', help='pangolin')
+    parser.add_argument('--clade', dest='clade', help='nextclade')
+    parser.add_argument('--variants', dest='variants', help='Spike muations')
     parser.add_argument('--consensus', dest='consensus', help='consensus')
-    parser.add_argument('--recovery_json', dest='recovery_json', help='recovery_json')
+    parser.add_argument('--recovery_json', dest='recovery_json', help='output json')
     
     args = parser.parse_args()
     try:
@@ -168,13 +159,13 @@ def main():
         elif library == 'cons':
             report_data["sequence"] = "Consensus"
         # Ns in consensus
-        with open(args.consensus) as cons_in:
+        with open(args.consensus, 'r') as cons_in:
             temp = cons_in.read().splitlines()
             consensus="".join(temp[1:])
         percN = (100.0 * consensus.count('N')) / (len(consensus))
         report_data["N_consensus"] = str(consensus.count('N')) + " (" + "{:.1f}".format(percN) + "%)"
         # obtain lineage and quality control from pangolin result and from Ns in consensus
-        with open(args.lineage) as table_in:
+        with open(args.lineage, 'r') as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1]
         lineage = tab_lineage[1][1]
@@ -186,11 +177,11 @@ def main():
             else:
                 report_data["qc_status"] = 'Passed'
         # obtain clade from nextclade result
-        with open(args.clade) as table_in:
+        with open(args.clade, 'r') as table_in:
             tab_clade = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
         report_data["clade"] = tab_clade[1][1].strip('\"')
         # variants
-        with open(args.variants) as table_in:
+        with open(args.variants, 'r') as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
         if library == 'sang':
             strDefault = "ND"
@@ -217,14 +208,14 @@ def main():
         report_data["ORF8"] = format_variants(report_variants[8])
         report_data["N-protein"] = format_variants(report_variants[9])
         report_data["ORF10"] = format_variants(report_variants[10])
-        # VOC
-        if isNewLineage(lineage):
+        # Variante
+        if isNewLineage(report_data["lineage"]):
             report_data["notifica"] = "New"
         else:
             report_data["notifica"] = "-"
-        if isNotificaLineage(lineage, report_data["S-protein"]):
+        if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
-        report_data["VOC"] = getTypeLineage(lineage, report_data["S-protein"])
+        report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"])
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
