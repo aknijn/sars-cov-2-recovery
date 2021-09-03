@@ -9,19 +9,10 @@
     </stdio>
     <command>
 <![CDATA[
-    cp $__tool_directory__/reference.fasta . &&
-    cp $__tool_directory__/genemap.gff . &&
-    cp $__tool_directory__/tree.json . &&
-    cp $__tool_directory__/qc.json . &&
-    cp $__tool_directory__/primers.csv . &&
-    nextclade
+    nextclade run
 	  --input-fasta=$consensus
-	  --input-root-seq=reference.fasta
+	  --input-dataset=$__tool_directory__/data
 	  --genes=E,M,N,ORF1a,ORF1b,ORF3a,ORF6,ORF7a,ORF7b,ORF8,ORF9b,S
-	  --input-gene-map=genemap.gff
-	  --input-tree=tree.json
-	  --input-qc-config=qc.json
-	  --input-pcr-primers=primers.csv
 	  --output-tsv=$clade
 	  --output-dir=nextclade/
 	  --output-basename=nextclade
