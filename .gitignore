@@ -9,3 +9,9 @@ tools/ivar_covid_aries_consensus.xml
 RECoVGISAID/gisaid_uploader.authtoken
 RECoVGISAID/recovconsensus.xml
 RECoVGISAID/RECoVConsensus.py
+RECoVG/data/Humangenome.1.bt2
+RECoVG/data/Humangenome.2.bt2
+RECoVG/data/Humangenome.3.bt2
+RECoVG/data/Humangenome.4.bt2
+RECoVG/data/Humangenome.rev.1.bt2
+RECoVG/data/Humangenome.rev.2.bt2
