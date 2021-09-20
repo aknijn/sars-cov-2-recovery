@@ -56,7 +56,7 @@ def isNotificaVariant(inLineage, inSpike):
     for variant in variants:
         if '+' in variant:
             lineage_spike = variant.split('+')
-            if (lineage_spike[0] == inLineage) and (lineage_spike[1] in inSpike):
+            if ((lineage_spike[0] == inLineage) or (lineage_spike[0] == '*')) and (lineage_spike[1] in inSpike):
                 isNotifica = True
                 break
         else:
