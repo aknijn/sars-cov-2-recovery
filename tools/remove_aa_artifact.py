@@ -77,7 +77,7 @@ def __main__():
                         codone.append(read_csv2[index+1])
                         index += 1
                         non_trovato+=1
-                    if read_csv2[index][1]!=read_csv2[index+1][1]:
+                    if index+1 < len(read_csv2) and read_csv2[index][1]!=read_csv2[index+1][1]:
                         position = [read_csv2[index][3], read_csv2[index][4], read_csv2[index][6], read_csv2[index + 1][3], read_csv2[index + 1][4], read_csv2[index + 1][6]]
                         if finding_errors(position) == 'NOT_SUCCESS':
                             if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
