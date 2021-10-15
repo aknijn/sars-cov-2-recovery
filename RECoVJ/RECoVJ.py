@@ -20,7 +20,7 @@ from mysql.connector import errorcode
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def isNewLineage(inLineage):
-    isNew = False;
+    isNew = False
     if not '*' in inLineage:
         config = configparser.ConfigParser()
         config.read(TOOL_DIR + '/../recovery.conf')
@@ -48,6 +48,36 @@ def isNewLineage(inLineage):
         else:
             cnx.close()
     return isNew
+
+def checkNewMutation(inSpike):
+    isNew = False
+    New = ""
+    if not inSpike == '=':
+        config = configparser.ConfigParser()
+        config.read(TOOL_DIR + '/../recovery.conf')
+        dbhost = config['db']['host']
+        dbdatabase = config['db']['database']
+        dbuser = config['db']['user']
+        dbpassword = config['db']['password']
+        config = {
+            'user': dbuser,
+            'password': dbpassword,
+            'host': dbhost,
+            'database': dbdatabase
+        }
+        try:
+            cnx = mysql.connector.connect(**config)
+            cursor = cnx.cursor(buffered=True)
+            result = cursor.callproc('p_NewMutations', (inSpike, ''))
+            New = result[1]
+            if ";" in New:
+                isNew = True
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(err)
+        else:
+            cnx.close()
+    return isNew, New
 
 def isNotificaVariant(inLineage, inSpike):
     isNotifica = False
@@ -211,9 +241,13 @@ def main():
         report_data["ORF10"] = format_variants(report_variants[10])
         # Variante
         if isNewLineage(report_data["lineage"]):
-            report_data["notifica"] = "New"
+            report_data["notifica"] = "nuovo lignaggio"
         else:
-            report_data["notifica"] = "-"
+            isNewMutation, NewMutation = checkNewMutation(report_data["S-protein"])
+            if isNewMutation:
+                report_data["notifica"] = "nuova mutazione " + NewMutation
+            else:
+                report_data["notifica"] = "-"
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
         report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"])
