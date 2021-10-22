@@ -69,7 +69,9 @@ def __main__():
     # Consensus
     elif args.library=='cons':
         # ALIGN SARS-COV-2 GENOME
-        subprocess.call("minimap2 -t ${GALAXY_SLOTS:-4} " + TOOL_DIR + "/data/genome.fa '" + args.input1 + "' -a | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
+        subprocess.call("sed '/^[^>]/s/-//g' '" + args.input1 + "' > no-fasta", shell=True)
+        subprocess.call("sed '/^[^>]/s/[^ATGCatgc]/N/g' no-fasta > clean_fasta", shell=True)
+        subprocess.call("minimap2 -t ${GALAXY_SLOTS:-4} " + TOOL_DIR + "/data/genome.fa clean_fasta -a | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o " + args.covidref_aligned, shell=True)
 
     # COPY CORRESPONDING REFERENCE
     if args.library=='sang':

@@ -47,14 +47,10 @@
     echo $strain > $strainname &&
     touch $uploaded_fasta &&
     #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).endswith(".fasta"):
-      sed '/^[^>]/s/-//g' '${input_pc.reverse}' > sequence_fasta &&
-      sed '/^[^>]/s/[^ATGCatgc]/N/g' sequence_fasta > $uploaded_fasta &&
-      cp $uploaded_fasta '${input_pc.reverse}' &&
+      cp '${input_pc.reverse}' $uploaded_fasta &&
     #else:
       #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).endswith(".fasta"):
-        sed '/^[^>]/s/-//g' '${input_pc.forward}' > sequence_fasta &&
-        sed '/^[^>]/s/[^ATGCatgc]/N/g' sequence_fasta > $uploaded_fasta &&
-        cp $uploaded_fasta '${input_pc.forward}' &&
+        cp '${input_pc.forward}' $uploaded_fasta &&
       #end if
     #end if
 
