@@ -110,7 +110,7 @@ def getVariant_Lineage_Clade(inLineage_Clade, inSpike, inType):
     for line in lines:
         relations = line.split('\t')
         if relations[1] == '*':
-            if relations[0] == inLineage_Clade:
+            if ((relations[0] == inLineage_Clade) or ('*' in relations[0] and relations[0].replace('*','') in inLineage_Clade)):
                 outVariant = relations[2]
                 break
         else:
