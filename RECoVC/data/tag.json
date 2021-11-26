@@ -1,5 +1,5 @@
 {
-  "comment": "New data, new clades 21I (Delta) and 21J (Delta)",
+  "comment": "Switch to GISAID data for tree, new clade 21K (B.1.1.529) included",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -43,5 +43,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2021-10-11T19:00:32Z"
+  "tag": "2021-11-26T14:02:45Z"
 }
