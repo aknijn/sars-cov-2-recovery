@@ -1,5 +1,5 @@
 {
-  "comment": "Add 21K (Omicron) sample sequences",
+  "comment": "Omicron split into 21K/L",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -43,5 +43,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2021-12-03T00:20:15Z"
+  "tag": "2021-12-09T18:09:18Z"
 }

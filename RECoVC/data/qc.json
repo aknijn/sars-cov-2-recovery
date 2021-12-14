@@ -66,6 +66,7 @@
     "enabled": true,
     "ignoredStopCodons": [
       { "geneName": "ORF3a", "codon": 253 },
+      { "geneName": "ORF7a", "codon": 2 },
       { "geneName": "ORF7a", "codon": 37 },
       { "geneName": "ORF7a", "codon": 40 },
       { "geneName": "ORF7a", "codon": 61 },
