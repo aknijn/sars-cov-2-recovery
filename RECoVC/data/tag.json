@@ -1,5 +1,5 @@
 {
-  "comment": "Omicron split into 21K/L",
+  "comment": "Clade update: 21M (Omicron) added, 21L elevated to Omicron",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -43,5 +43,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2021-12-09T18:09:18Z"
+  "tag": "2021-12-16T20:57:35Z"
 }
