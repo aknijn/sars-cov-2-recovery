@@ -1,4 +1,4 @@
-<tool id="recovg" name="RECoVG" version="3.5">
+<tool id="recovg" name="RECoVG" version="4.0">
     <description>Determine input library type and trim, filter and align accordingly</description>
     <requirements>
         <requirement type="package" version="3.7">python</requirement>

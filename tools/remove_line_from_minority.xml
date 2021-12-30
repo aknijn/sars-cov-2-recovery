@@ -1,0 +1,15 @@
+<tool id="remove_line_from_minority" name="remove lines from minority" version="1.1">
+    <description>Remove lines already in majority from minority</description>
+    <command detect_errors="exit_code">
+<![CDATA[
+    python $__tool_directory__/remove_line_from_minority.py --input_max_tab $input_max_tab --input_min_tab $input_min_tab --output_min_tab $output_min_tab
+]]>
+    </command>
+    <inputs>
+        <param name="input_max_tab" type="data" format="tabular" label="variants majority file" />
+        <param name="input_min_tab" type="data" format="tabular" label="variants minority file" />
+    </inputs>
+    <outputs>
+        <data name="output_min_tab" format="tabular" label="${tool.name} on ${on_string}" />
+    </outputs>
+</tool>

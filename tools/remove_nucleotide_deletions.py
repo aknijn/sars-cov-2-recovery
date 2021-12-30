@@ -34,7 +34,7 @@ def __main__():
         if line[5].find("FRAME_SHIFT")!=-1:
             read_csv_minmax.append(line)
 
-    new_sequence=''
+    new_sequence=[]
     i=0
     lunghezza=len(sequence)-1
     while i<lunghezza:
@@ -43,7 +43,7 @@ def __main__():
             for line in read_csv_minmax:
                 if position_tab==int(line[1]) and read_csv_minmax[read_csv_minmax.index(line)][1]!=read_csv_minmax[read_csv_minmax.index(line)-1][1]:
                     nucleotide=line[2][1].lower()
-                    new_sequence+=nucleotide
+                    new_sequence.append(nucleotide)
             i+=1
         else:
             new_sequence+=sequence[i]
@@ -60,16 +60,13 @@ def __main__():
             i+=1
     
     if len(to_remove)>=1:
-        to_remove.sort(reverse=True)
         for i in to_remove:
-            for line in read_csv_minmax:
-                if i == int(line[1]):
-                    new_sequence=new_sequence[:i]+new_sequence[i+1:]
-
-    new_sequence=new_sequence.replace("-","")
+            new_sequence[i]="-"
+    clean_sequence="".join(new_sequence)
+    clean_sequence=clean_sequence.replace("-","")
     fasta=open("consensus.fasta", "w")
     fasta.write(">"+name_sequence+"\n")
-    fasta.write(new_sequence.upper())
+    fasta.write(clean_sequence.upper())
     fasta.close
 
 if __name__ == "__main__":

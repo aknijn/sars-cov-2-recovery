@@ -46,7 +46,7 @@ def __main__():
         # ALIGN SARS-COV-2 GENOME
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome' -1 filtered.1.fq -2 filtered.2.fq --very-sensitive-local | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o aligned.bam", shell=True)
         # TRIM PRIMERS
-        subprocess.call("ivar trim -e -m 30 -q 15 -s 4 -i aligned.bam -b " + TOOL_DIR + "/data/QIAseq_artic.bed -p primer_trimmed", shell=True)
+        subprocess.call("ivar trim -e -m 30 -q 20 -s 4 -i aligned.bam -b " + TOOL_DIR + "/data/QIAseq_artic.bed -p primer_trimmed", shell=True)
         subprocess.call("samtools sort -@ \${GALAXY_SLOTS:-1} -o primer_trimmed.sorted.bam primer_trimmed.bam", shell=True)
         shutil.copy("primer_trimmed.sorted.bam", args.covidref_aligned)
     # Nanopore
