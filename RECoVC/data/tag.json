@@ -1,5 +1,5 @@
 {
-  "comment": "Clade update: 21M (Omicron) added, 21L elevated to Omicron",
+  "comment": "More Omicrons in tree, added BA.2/3 to sample sequences",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -43,5 +43,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2021-12-16T20:57:35Z"
+  "tag": "2022-01-05T19:54:31Z"
 }
