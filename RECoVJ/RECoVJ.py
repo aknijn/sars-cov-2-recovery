@@ -91,7 +91,7 @@ def isNotificaVariant(inLineage, inSpike):
                 isNotifica = True
                 break
         else:
-            if variant == inLineage:
+            if ((variant == inLineage) or ('*' in variant and variant.replace('*','') in inLineage)):
                 isNotifica = True
                 break
     return isNotifica
