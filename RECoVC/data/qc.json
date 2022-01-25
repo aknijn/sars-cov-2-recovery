@@ -3,7 +3,10 @@
   "privateMutations": {
     "enabled": true,
     "typical": 8,
-    "cutoff": 24
+    "cutoff": 24,
+    "weightLabeledSubstitutions": 4,
+    "weightReversionSubstitutions": 6,
+    "weightUnlabeledSubstitutions": 1
   },
   "missingData": {
     "enabled": true,
