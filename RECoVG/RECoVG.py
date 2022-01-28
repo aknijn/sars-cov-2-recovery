@@ -40,8 +40,9 @@ def __main__():
     # Illumina
     elif args.library=='illu':
         # TRIMMING
-        subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar PE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' '" + args.input2 + "' trimmed1.fq fastq_out_r1_unpaired trimmed2.fq fastq_out_r2_unpaired LEADING:15 TRAILING:15 MINLEN:30 SLIDINGWINDOW:4:15", shell=True)
-         # FILTER HUMAN GENOME
+        # subprocess.call("java ${_JAVA_OPTIONS:--Xmx8G} -jar trimmomatic.jar PE -threads ${GALAXY_SLOTS:-6} -phred33 '" + args.input1 + "' '" + args.input2 + "' trimmed1.fq fastq_out_r1_unpaired trimmed2.fq fastq_out_r2_unpaired LEADING:15 TRAILING:15 MINLEN:30 SLIDINGWINDOW:4:15", shell=True)
+        subprocess.call("python " + TOOL_DIR + "/fastq_positional_quality_trimming.py --maxlt -1 --lt 0 --rt 5 --minqt 15 --avgqt 15.0 --minlf 30 -1 '" + args.input1 + "' --trimmed1 trimmed1.fq --log log.txt -2 '" + args.input2 + "' --trimmed2 trimmed2.fq --trimmedunpaired trimmedunpaired.fq", shell=True)
+        # FILTER HUMAN GENOME
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/Humangenome' -1 trimmed1.fq -2 trimmed2.fq --un-conc filtered.fq --very-fast | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o human_genome_aligned", shell=True)
         # ALIGN SARS-COV-2 GENOME
         subprocess.call("bowtie2 -p ${GALAXY_SLOTS:-4} -x '" + TOOL_DIR + "/data/genome' -1 filtered.1.fq -2 filtered.2.fq --very-sensitive-local | samtools sort -@${GALAXY_SLOTS:-2} -O bam -o aligned.bam", shell=True)
