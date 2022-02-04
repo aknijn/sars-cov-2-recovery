@@ -96,9 +96,10 @@ def isNotificaVariant(inLineage, inSpike):
                 break
     return isNotifica
 
-def getVariant(inLineage, inClade, inSpike):
+def getVariant(inLineage, inClade, inSpike, inLibrary):
     typeVariant = '-'
-    typeVariant = getVariant_Lineage_Clade(inLineage, inSpike, 'Lineages')
+    if inLibrary != 'sang':
+        typeVariant = getVariant_Lineage_Clade(inLineage, inSpike, 'Lineages')
     if typeVariant == '-':
         typeVariant = getVariant_Lineage_Clade(inClade, inSpike, 'Clades')
     return typeVariant
@@ -250,7 +251,7 @@ def main():
                 report_data["notifica"] = "-"
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
-        report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"])
+        report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"], library)
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
