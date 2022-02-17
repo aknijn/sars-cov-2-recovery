@@ -1,5 +1,5 @@
 {
-  "comment": "Enables reversion and labeled mutation highlighting",
+  "comment": "More basal sequences reduce false reversions",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -44,5 +44,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2022-01-18T12:00:00Z"
+  "tag": "2022-02-07T12:00:00Z"
 }
