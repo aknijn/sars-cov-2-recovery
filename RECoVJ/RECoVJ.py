@@ -70,7 +70,7 @@ def checkNewMutation(inSpike):
             cursor = cnx.cursor(buffered=True)
             result = cursor.callproc('p_NewMutations', (inSpike, ''))
             New = result[1] + ""
-            if New not is None:
+            if New is not None:
                 if ";" in New:
                     isNew = True
             cursor.close()
