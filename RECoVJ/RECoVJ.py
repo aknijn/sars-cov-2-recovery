@@ -68,11 +68,14 @@ def checkNewMutation(inSpike):
         try:
             cnx = mysql.connector.connect(**config)
             cursor = cnx.cursor(buffered=True)
-            result = cursor.callproc('p_NewMutations', (inSpike, ''))
-            New = result[1]
+            cursor.callproc('p_NewMutations', (inSpike, ''))
+            result = [r.fetchall() for r in cursor.stored_results()]
+            New = result[0][0][0]
             if New is not None:
                 if ";" in New:
                     isNew = True
+            else:
+                New = ""
             cursor.close()
         except mysql.connector.Error as err:
             print(err)
