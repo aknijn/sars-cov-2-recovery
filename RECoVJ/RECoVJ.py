@@ -100,6 +100,12 @@ def isNotificaVariant(inLineage, inSpike):
                 break
     return isNotifica
 
+def isNotificaVariant2(inVariante, inOrf1ab):
+    isNotifica = False
+    if ((inVariante == 'Omicron') and ('I484V' in inOrf1ab) and ('A488S' in inOrf1ab)):
+        isNotifica = True
+    return isNotifica
+
 def getVariant(inLineage, inClade, inSpike, inLibrary):
     typeVariant = '-'
     if inLibrary != 'sang':
@@ -245,17 +251,19 @@ def main():
         report_data["N-protein"] = format_variants(report_variants[9])
         report_data["ORF10"] = format_variants(report_variants[10])
         # Variante
+        report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"], library)
+        # Notifica
+        report_data["notifica"] = "-"
         if isNewLineage(report_data["lineage"]):
-            report_data["notifica"] = "nuovo lignaggio"
+            report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
         else:
             isNewMutation, NewMutation = checkNewMutation(report_data["S-protein"])
             if isNewMutation:
                 report_data["notifica"] = "nuova mutazione " + NewMutation
-            else:
-                report_data["notifica"] = "-"
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
-        report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"], library)
+        if isNotificaVariant2(report_data["variante"], report_data["ORF1ab"]):
+            report_data["notifica"] = "NSP2:I484V & NSP3:A488S"
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
