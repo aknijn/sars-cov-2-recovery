@@ -264,6 +264,8 @@ def main():
             report_data["notifica"] = "Si"
         if isNotificaVariant2(report_data["variante"], report_data["ORF1ab"]):
             report_data["notifica"] = "NSP2:I484V & NSP3:A488S"
+        if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
+            report_data["notifica"] = "Si"
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
