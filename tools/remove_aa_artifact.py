@@ -66,7 +66,7 @@ def __main__():
         index=1
         while index<len(read_csv2[:-1]):
             if finding_errors(read_csv2[index][3])=='SUCCESS':
-                    file.write(read_csv2[index][0] + "\t" + read_csv2[index][1]  + "\t" + read_csv2[index][2]  + "\t" + read_csv2[index][3]+' - Degeneration\n')
+                    out_file.write(read_csv2[index][0] + "\t" + read_csv2[index][1]  + "\t" + read_csv2[index][2]  + "\t" + read_csv2[index][3]+' - Degeneration\n')
                     index+=1
             else:
                 aa=getAABase(read_csv2[index][6])
