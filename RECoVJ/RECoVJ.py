@@ -234,11 +234,12 @@ def main():
         report_variants[1] = "="
         for variant in tab_variants:
             if len(variant)>1:
-                if variant[1] != 'Position' and colindex(variant[0]) != 11 and variant[len(variant)-1] != 'S' and len(variant) == 7:
-                    if "DELETION" in variant[4]:
-                        report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
-                    else:
-                        report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
+                if variant[1] != 'Position' and colindex(variant[0]) != 11 and len(variant) > 6:
+                    if variant[len(variant)-1] != 'S':
+                        if "DELETION" in variant[4]:
+                            report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "_del; "
+                        else:
+                            report_variants[colindex(variant[0])] = report_variants[colindex(variant[0])] + variant[6] + "; "
         report_data["ORF1ab"] = format_variants(report_variants[0])
         report_data["S-protein"] = format_variants(report_variants[1])
         report_data["ORF3a"] = format_variants(report_variants[2])
