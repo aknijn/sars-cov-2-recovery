@@ -270,6 +270,7 @@ def main():
             report_data["notifica"] = "Si"
         if report_data["clade"] == "recombinant":
             report_data["notifica"] = "Recombinante " + clade_lineage
+            report_data["variante"] = "Recombinante"
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
