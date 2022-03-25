@@ -265,6 +265,8 @@ def main():
             report_data["notifica"] = "Si"
         if isNotificaVariant2(report_data["variante"], report_data["ORF1ab"]):
             report_data["notifica"] = "NSP2:I484V & NSP3:A488S"
+        if report_data["clade"] == 'recombinant':
+            report_data["notifica"] = "Recombinante " + tab_clade[1][2].strip('\"')
         if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
             report_data["notifica"] = "Si"
     finally:
