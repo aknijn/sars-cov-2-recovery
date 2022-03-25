@@ -210,7 +210,7 @@ def main():
         with open(args.lineage, 'r') as table_in:
             tab_lineage = [[str(col).rstrip() for col in row.split(',')] for row in table_in]
         report_data["lineage"] = tab_lineage[1][1]
-        lineage = tab_lineage[1][1]
+        # lineage = tab_lineage[1][1]
         if tab_lineage[1][len(tab_lineage[1])-2] != 'passed_qc':
             report_data["qc_status"] = 'Failed'
         else:
@@ -256,21 +256,24 @@ def main():
         report_data["variante"] = getVariant(report_data["lineage"], report_data["clade"], report_data["S-protein"], library)
         # Notifica
         report_data["notifica"] = "-"
-        if isNewLineage(report_data["lineage"]):
-            report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
-        else:
-            isNewMutation, NewMutation = checkNewMutation(report_data["S-protein"])
-            if isNewMutation:
-                report_data["notifica"] = "nuova mutazione " + NewMutation
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
         if isNotificaVariant2(report_data["variante"], report_data["ORF1ab"]):
             report_data["notifica"] = "NSP2:I484V & NSP3:A488S"
         if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
             report_data["notifica"] = "Si"
+        if report_data["lineage"][0:1] == "X":
+            report_data["notifica"] = "Ricombinante " + report_data["lineage"]
+            report_data["variante"] = "Ricombinante"
         if report_data["clade"] == "recombinant":
-            report_data["notifica"] = "Recombinante " + clade_lineage
-            report_data["variante"] = "Recombinante"
+            report_data["notifica"] = "Ricombinante " + clade_lineage
+            report_data["variante"] = "Ricombinante"
+        if isNewLineage(report_data["lineage"]):
+            report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
+        else:
+            isNewMutation, NewMutation = checkNewMutation(report_data["S-protein"])
+            if isNewMutation:
+                report_data["notifica"] = "nuova mutazione " + NewMutation
     finally:
         report = open(args.recovery_json, 'w')
         report.write("[" + json.dumps(report_data) + "]")
