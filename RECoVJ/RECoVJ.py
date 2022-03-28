@@ -265,7 +265,7 @@ def main():
         if report_data["lineage"][0:1] == "X":
             report_data["notifica"] = "Ricombinante " + report_data["lineage"]
             report_data["variante"] = "Ricombinante"
-        if report_data["clade"] == "recombinant":
+        if report_data["clade"] == "recombinant" and report_data["sequence"] != "Sanger":
             report_data["notifica"] = "Ricombinante " + clade_lineage
             report_data["variante"] = "Ricombinante"
         if isNewLineage(report_data["lineage"]):
