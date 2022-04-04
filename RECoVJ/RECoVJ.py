@@ -223,6 +223,8 @@ def main():
             tab_clade = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
         report_data["clade"] = tab_clade[1][1].strip('\"')
         clade_lineage = tab_clade[1][2].strip('\"')
+        if report_data["clade"] == "recombinant":
+            report_data["clade"] = "recombinant " + clade_lineage
         # variants
         with open(args.variants, 'r') as table_in:
             tab_variants = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
@@ -265,7 +267,7 @@ def main():
         if report_data["lineage"][0:1] == "X":
             report_data["notifica"] = "Ricombinante " + report_data["lineage"]
             report_data["variante"] = "Ricombinante"
-        if report_data["clade"] == "recombinant" and report_data["sequence"] != "Sanger":
+        if report_data["clade"][0:11] == "recombinant" and report_data["sequence"] != "Sanger":
             report_data["notifica"] = "Ricombinante " + clade_lineage
             report_data["variante"] = "Ricombinante"
         if isNewLineage(report_data["lineage"]):
