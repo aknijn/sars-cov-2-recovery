@@ -270,9 +270,8 @@ def main():
         if report_data["clade"][0:11] == "recombinant" and report_data["sequence"] != "Sanger" and report_data["ORF1ab"] != "=" and report_data["S-protein"] != "=":
             report_data["notifica"] = "Ricombinante " + clade_lineage
             report_data["variante"] = "Ricombinante"
-        else:
-            if report_data["clade"][0:11] == "recombinant":
-                report_data["notifica"] = "analisi incerta"
+        elif report_data["clade"][0:11] == "recombinant":
+            report_data["notifica"] = "analisi incerta"
         if isNewLineage(report_data["lineage"]):
             report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
         else:
