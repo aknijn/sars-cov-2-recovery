@@ -101,11 +101,11 @@ def isNotificaVariant(inLineage, inSpike):
     return isNotifica
 
 def isNotificaVariant2(inVariante, inSpike, inOrf1ab):
-    isNotifica = False
+    isNotifica = "-"
     if ((inVariante == 'Omicron') and ('I484V' in inOrf1ab) and ('A488S' in inOrf1ab)):
-        isNotifica = True
+        isNotifica = "NSP2:I484V & NSP3:A488S"
     if ((inVariante == 'Omicron') and ('L452R' in inSpike) and ('F486V' in inSpike)):
-        isNotifica = True
+        isNotifica = "S:L452R & S:F486V"
     return isNotifica
 
 def getVariant(inLineage, inClade, inSpike, inLibrary):
@@ -262,8 +262,9 @@ def main():
         report_data["notifica"] = "-"
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
-        if isNotificaVariant2(report_data["variante"], report_data["S-protein"], report_data["ORF1ab"]):
-            report_data["notifica"] = "NSP2:I484V & NSP3:A488S"
+        notificaVariantSpot = isNotificaVariant2(report_data["variante"], report_data["S-protein"], report_data["ORF1ab"])
+        if notificaVariantSpot != "-":
+            report_data["notifica"] = notificaVariantSpot
         #if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
         #    report_data["notifica"] = "Si"
         if report_data["lineage"][0:1] == "X":
