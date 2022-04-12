@@ -274,6 +274,7 @@ def main():
             report_data["notifica"] = "Ricombinante " + clade_lineage
             report_data["variante"] = "Ricombinante"
         elif report_data["clade"][0:11] == "recombinant":
+            report_data["clade"] = "ND"
             report_data["notifica"] = "analisi incerta"
         if isNewLineage(report_data["lineage"]):
             report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
