@@ -104,8 +104,8 @@ def isNotificaVariant2(inVariante, inSpike, inOrf1ab, inEprot):
     isNotifica = "-"
     if ((inVariante == 'Omicron') and ('I484V' in inOrf1ab) and ('A488S' in inOrf1ab)):
         isNotifica = "NSP2:I484V & NSP3:A488S"
-    if ((inVariante == 'Omicron') and ('G257S' in inSpike) and ('T11A' in inEprot)):
-        isNotifica = "S:G257S & E:T11A"
+    # if ((inVariante == 'Omicron') and ('G257S' in inSpike) and ('T11A' in inEprot)):
+    #     isNotifica = "S:G257S & E:T11A"
     return isNotifica
 
 def getVariant(inLineage, inClade, inSpike, inLibrary):
