@@ -208,6 +208,9 @@ def main():
             consensus="".join(temp[1:])
         consensusN = consensus.replace("?", "N")
         percN = (100.0 * consensusN.count('N')) / (len(consensusN))
+        print(consensus +"\n");
+        print(consensusN +"\n");
+        print(percN +"\n");
         report_data["N_consensus"] = str(consensusN.count('N')) + " (" + "{:.1f}".format(percN) + "%)"
         # obtain lineage and quality control from pangolin result and from Ns in consensus
         with open(args.lineage, 'r') as table_in:
