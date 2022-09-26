@@ -138,7 +138,7 @@ def __main__():
                     newcodon=codone[0][5][4]+codone[1][5][5]+codone[2][5][6]
                     if gencode.get(read_csv2[index][5][0:3].upper())==gencode.get(newcodon):
                         mutations += 'SYNONYMOUS_CODING'
-                        riga += cod1 + '\t' + cod2 + '\t' + mutations + '\t' + codon + '\t' + gencode.get(codon[0:-4].upper()) + str(aa) + '\n'
+                        riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][5][0:3].upper()+'\t'+newcodon+'\t'+mutations+'\t'+read_csv2[index][5][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv2[index][5][0:3].upper())+str(aa)+'\n'
                     else:
                         mutations += 'NON_SYNONYMOUS_CODING'
                         riga+=codone[0][0]+'\t'+codone[0][1]+'\t'+read_csv2[index][5][0:3].upper()+'\t'+newcodon+'\t'+mutations+'\t'+read_csv2[index][5][0:3].upper()+'/'+newcodon+'\t'+gencode.get(read_csv2[index][5][0:3].upper())+aa+gencode.get(newcodon)+'\n'
