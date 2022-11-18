@@ -36,6 +36,22 @@ def finding_errors(positions):
                 return success
     return success
 
+def finding_errors_no_stop(positions):
+    success='NOT_SUCCESS'
+    errors={'FRAME_SHIFT','CHROMOSOME_LARGE_DELETION','CODON_CHANGE','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION','CODON_DELETION','CODON_CHANGE_PLUS_CODON_DELETION','CODON_INSERTION','CODON_CHANGE_PLUS_CODON_INSERTION', '?'}
+    degeneration={"R","D","M","N","S","K","W","H","B","V","Y","N"}
+    for error in errors:
+        for p in positions:
+            if p.find(error)!=-1:
+                success = 'SUCCESS'
+                return success
+    for deg in degeneration:
+        for p in positions:
+            if p==deg:
+                success = 'SUCCESS'
+                return success
+    return success
+
 def getAABase(AA):
     AABase=''
     for x in AA:
@@ -75,7 +91,7 @@ def __main__():
                 non_trovato=0
                 if read_csv2[index][1]!=read_csv2[index+1][1]:
                     position = [read_csv2[index][3], read_csv2[index][4], read_csv2[index][6], read_csv2[index + 1][3], read_csv2[index + 1][4], read_csv2[index + 1][6]]
-                    if finding_errors(position)=='NOT_SUCCESS':
+                    if finding_errors_no_stop(position)=='NOT_SUCCESS':
                         if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
                             codone.append(read_csv2[index])
                             codone.append(read_csv2[index+1])
@@ -83,7 +99,7 @@ def __main__():
                             non_trovato+=1
                         if index+1 < len(read_csv2) and read_csv2[index][1]!=read_csv2[index+1][1]:
                             position = [read_csv2[index][3], read_csv2[index][4], read_csv2[index][6], read_csv2[index + 1][3], read_csv2[index + 1][4], read_csv2[index + 1][6]]
-                            if finding_errors(position) == 'NOT_SUCCESS':
+                            if finding_errors_no_stop(position) == 'NOT_SUCCESS':
                                 if aa==getAABase(read_csv2[index+1][6]) and aa!='' and read_csv2[index][0]==read_csv2[index+1][0]:
                                     codone.append(read_csv2[index+1])
                                     index += 1
