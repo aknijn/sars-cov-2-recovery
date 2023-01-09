@@ -265,9 +265,6 @@ def main():
         report_data["notifica"] = "-"
         if isNotificaVariant(report_data["lineage"], report_data["S-protein"]):
             report_data["notifica"] = "Si"
-        notificaVariantSpot = isNotificaVariant2(report_data["variante"], report_data["S-protein"], report_data["ORF1ab"], report_data["E-protein"])
-        if notificaVariantSpot != "-":
-            report_data["notifica"] = notificaVariantSpot
         #if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
         #    report_data["notifica"] = "Si"
         if report_data["lineage"][0:1] == "X":
@@ -281,6 +278,9 @@ def main():
         elif report_data["clade"][0:11] == "recombinant":
             report_data["clade"] = "ND"
             report_data["notifica"] = "analisi incerta"
+        notificaVariantSpot = isNotificaVariant2(report_data["variante"], report_data["S-protein"], report_data["ORF1ab"], report_data["E-protein"])
+        if notificaVariantSpot != "-":
+            report_data["notifica"] = notificaVariantSpot
         if isNewLineage(report_data["lineage"]):
             report_data["notifica"] = "nuovo lignaggio " + report_data["lineage"]
         else:
