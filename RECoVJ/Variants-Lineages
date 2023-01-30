@@ -68,6 +68,9 @@ DS.*	*	Omicron2
 DT.*	*	Omicron5
 DU.*	*	Omicron5
 DV.*	*	Omicron2
+DW.*	*	Omicron5
+DY.*	*	Omicron5
+DZ.*	*	Omicron5
 B.1.1.7	E484K	Alpha+E484K
 B.1.1.7	*	Alpha
 Q.*	*	Alpha
