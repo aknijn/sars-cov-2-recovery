@@ -226,8 +226,8 @@ def main():
         # obtain clade from nextclade result
         with open(args.clade, 'r') as table_in:
             tab_clade = [[str(col).rstrip() for col in row.split('\t')] for row in table_in]
-        report_data["clade"] = tab_clade[1][1].strip('\"')
-        clade_lineage = tab_clade[1][2].strip('\"')
+        report_data["clade"] = tab_clade[1][2].strip('\"')
+        clade_lineage = tab_clade[1][3].strip('\"')
         if report_data["clade"] == "recombinant":
             report_data["clade"] = "recombinant " + clade_lineage
         # variants
