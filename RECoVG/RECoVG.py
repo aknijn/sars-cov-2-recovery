@@ -52,7 +52,7 @@ def __main__():
         shutil.copy("primer_trimmed.sorted.bam", args.covidref_aligned)
     # Nanopore
     elif args.library=='nano':
-        if args.input1.endswith(".fast5"):
+        if args.input1.lower().endswith(".fast5"):
             os.system("ln -s " + args.input1 + " chopped.fq")
         else:
             # PORECHOP

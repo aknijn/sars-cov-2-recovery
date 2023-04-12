@@ -18,14 +18,14 @@
     #import os
     #import subprocess
     #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
-      #if str( $input_pc.forward.name ).endswith(".fasta") or str( $input_pc.reverse.name ).endswith(".fasta"):
+      #if str( $input_pc.forward.name ).lower().endswith(".fasta") or str( $input_pc.reverse.name ).lower().endswith(".fasta"):
         #if os.stat( str($input_pc.forward) ).st_size < 6000 and os.stat( str($input_pc.reverse) ).st_size < 6000:
           #set $library = "sang"
         #else:
           #set $library = "cons"
         #end if
       #else:
-        #if str( $input_pc.forward.name ).endswith(".fast5") or str( $input_pc.reverse.name ).endswith(".fast5"):
+        #if str( $input_pc.forward.name ).lower().endswith(".fast5") or str( $input_pc.reverse.name ).lower().endswith(".fast5"):
           #set $library = "nano"
         #else:
           #if str( $input_pc.reverse.name ) == "dummy.fastq":
@@ -46,10 +46,10 @@
     echo $library > $librarytype &&
     echo $strain > $strainname &&
     touch $uploaded_fasta &&
-    #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).endswith(".fasta"):
+    #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).lower().endswith(".fasta"):
       cp '${input_pc.reverse}' $uploaded_fasta &&
     #else:
-      #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).endswith(".fasta"):
+      #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).lower().endswith(".fasta"):
         cp '${input_pc.forward}' $uploaded_fasta &&
       #end if
     #end if
