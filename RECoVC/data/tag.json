@@ -1,5 +1,5 @@
 {
-  "comment": "Update to include lineage BA.2.86",
+  "comment": "",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -44,5 +44,5 @@
     "source": "genbank",
     "strainName": "Wuhan-Hu-1/2019"
   },
-  "tag": "2023-09-21T12:00:00Z"
+  "tag": "2023-12-03T12:00:00Z"
 }
