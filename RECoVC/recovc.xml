@@ -11,7 +11,6 @@
 <![CDATA[
     nextclade run $consensus
 	  --input-dataset=$__tool_directory__/data
-	  --genes=E,M,N,ORF1a,ORF1b,ORF3a,ORF6,ORF7a,ORF7b,ORF8,ORF9b,S
 	  --output-tsv=$clade
 	  --output-all=nextclade/
 ]]>
