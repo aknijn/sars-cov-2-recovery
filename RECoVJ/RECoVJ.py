@@ -274,10 +274,8 @@ def main():
         #if report_data["variante"] != 'Omicron' and report_data["S-protein"].count(';') > 15:
         #    report_data["notifica"] = "Si"
         if report_data["lineage"][0:1] == "X":
-            report_data["notifica"] = "Ricombinante " + report_data["lineage"]
             report_data["variante"] = "Ricombinante"
         if report_data["clade"][0:11] == "recombinant" and report_data["sequence"] != "Sanger" and report_data["ORF1ab"] != "=" and report_data["S-protein"] != "=" and report_data["qc_status"] != 'Failed':
-            report_data["notifica"] = "Ricombinante " + clade_lineage
             report_data["variante"] = "Ricombinante"
         elif report_data["clade"][0:11] == "recombinant" and report_data["sequence"] != "Sanger":
             report_data["notifica"] = "analisi incerta"
