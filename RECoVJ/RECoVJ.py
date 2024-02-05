@@ -110,6 +110,8 @@ def isNotificaVariant2(inVariante, inSpike, inOrf1ab, inEprot):
          isNotifica = "BA.2.86"
     if (('P191S' in inOrf1ab) and ('F225L' in inOrf1ab)):
          isNotifica = "ORF1a:P191S & ORF1a:F225L"
+    if (('V642G' in inSpike) and ('S691P' in inSpike) and ('T791I' in inSpike)):
+         isNotifica = "S:V642G & S:S691P & S:T791I"
     return isNotifica
 
 def getVariant(inLineage, inClade, inSpike, inLibrary):
