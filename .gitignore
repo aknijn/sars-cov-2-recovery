@@ -1,12 +1,6 @@
-
-RECoVGISAID/gisaid_uploader.py
-RECoVGISAID/recovgisaid-pre.xml
-RECoVGISAID/RECoVGISAID_OLD.py
-RECoVGISAID/RECoVGISAID4.py
-RECoVGISAID/recovgisaid.xml
-RECoVGISAID/gisaid_uploader.authtoken
-RECoVGISAID/recovconsensus.xml
-RECoVGISAID/RECoVConsensus.py
+RECoVLibs/recovdb.py
+RECoVGISAID/covCLI
+RECoVGISAID/fluCLI
 RECoVG/data/Humangenome.1.bt2
 RECoVG/data/Humangenome.2.bt2
 RECoVG/data/Humangenome.3.bt2
