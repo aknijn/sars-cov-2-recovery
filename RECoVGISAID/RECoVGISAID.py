@@ -17,14 +17,18 @@ import shutil
 import subprocess
 import csv
 from datetime import datetime
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../RECoVLibs/")
-from recovdb import IridaDb
 
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
+LIB_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../RECoVLibs/'
 CONFIG_FILE = TOOL_DIR + '/../recovery.conf'
 if os.path.isdir('/mnt/pulsar/files')
     TOOL_DIR = '/mnt/pulsar/files'
+    LIB_DIR = TOOL_DIR + '/RECoVLibs/'
     CONFIG_FILE = TOOL_DIR + '/recovery.conf'
+
+sys.path.append(LIB_DIR)
+from recovdb import IridaDb
+
 
 def getMetadata(inputfiles, inuser, inspecies):
     iridaDb = IridaDb(inspecies)
