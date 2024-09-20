@@ -1,0 +1,35 @@
+<tool id="recovgisaid" name="RECoVGISAID" version="1.0">
+    <description>Upload consensus files to GISAID</description>
+    <requirements>
+        <requirement type="package" version="3.8">python</requirement>
+        <requirement type="package">requests</requirement>
+        <requirement type="package" version="8.0">mysql-connector-python</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+        <exit_code range=":-1" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    python 
+      $__tool_directory__/RECoVGISAID.py
+      --input_files $recovgisaid_filenames
+      --species '$species'
+      --user '$user'
+      --metadati $recovgisaid_csv
+      --multifasta $recovgisaid_fasta
+      --response $recovgisaid_result
+]]>
+    </command>
+    <inputs>
+        <param name="recovgisaid_filenames" format="tabular" type="data" label="filenames" />
+        <param name="user" type="text" label="user" />
+        <param name="species" type="text" label="Species" />
+    </inputs>
+
+    <outputs>
+        <data format="csv" name="recovgisaid_csv" label="csv for the GISAID upload" ></data>
+        <data format="fasta" name="recovgisaid_fasta" label="multifasta for the GISAID upload" ></data>
+        <data format="txt" name="recovgisaid_result" label="result from the GISAID upload" ></data>
+   </outputs>
+</tool>

@@ -1,0 +1,32 @@
+<tool id="recovconsensus" name="RECoVConsensus" version="1.0">
+    <description>Download consensus files</description>
+    <requirements>
+        <requirement type="package" version="3.8">python</requirement>
+        <requirement type="package">requests</requirement>
+        <requirement type="package" version="8.0">mysql-connector-python</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+        <exit_code range=":-1" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    python 
+      $__tool_directory__/RECoVConsensus.py
+      --input_files $recovconsensus_filenames
+      --species '$species'
+      --user '$user'
+      --multifasta $recovconsensus_fasta
+]]>
+    </command>
+
+    <inputs>
+        <param name="recovconsensus_filenames" format="tabular" type="data" label="filenames" />
+        <param name="user" type="text" label="user" />
+        <param name="species" type="text" label="Species" />
+    </inputs>
+
+    <outputs>
+        <data format="fasta" name="recovconsensus_fasta" label="multifasta for export" ></data>
+   </outputs>
+</tool>

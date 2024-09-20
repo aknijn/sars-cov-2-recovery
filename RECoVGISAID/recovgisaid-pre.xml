@@ -1,0 +1,26 @@
+<tool id="recovgisaid-pre" name="RECoVGISAID-pre" version="1.0">
+    <description>Transform input data collection in a tabular file</description>
+    <!-- basic error handling -->
+    <stdio>
+        <!-- Assume anything other than zero is an error -->
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+        <exit_code range=":-1" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    #if str( $input_pc.forward.name[0:15] ) == "fileForwardList":
+      cat $input_pc.forward > $recovgisaid_filenames
+    #else:
+      echo '$input_pc.forward' > $recovgisaid_filenames
+    #end if
+]]>
+    </command>
+
+    <inputs>
+        <param name="input_pc" type="data_collection" format="fastqsanger,fastqsanger.gz" collection_type="paired" label="Paired-end FASTQ collection" help="Paired-end FASTQ collection" />
+    </inputs>
+
+    <outputs>
+        <data name="recovgisaid_filenames" format="tabular" label="filenames" ></data>
+   </outputs>
+</tool>
