@@ -43,13 +43,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_files', dest='input_files', help='input files')
     parser.add_argument('--user', dest='user', help='user')
-    parser.add_argument('--species', dest='species', help='species')
+    #parser.add_argument('--species', dest='species', help='species')
     parser.add_argument('--multifasta', dest='multifasta', help='multifasta')
     args = parser.parse_args()
     config = configparser.ConfigParser()
     config.read(TOOL_DIR + '/../recovery.conf')
     iridadir = config['fs']['output_path']
-    metadata = getMetadata(args.input_files, args.user.replace("__at__", "@"), args.species)
+    species = "Coronavirus" #args.species
+    metadata = getMetadata(args.input_files, args.user.replace("__at__", "@"), species)
     if metadata:
         # create MultiFasta
         subprocess.run("touch multifasta", shell=True)

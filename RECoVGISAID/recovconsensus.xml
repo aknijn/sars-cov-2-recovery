@@ -14,7 +14,6 @@
     python 
       $__tool_directory__/RECoVConsensus.py
       --input_files $recovconsensus_filenames
-      --species '$species'
       --user '$user'
       --multifasta $recovconsensus_fasta
 ]]>
@@ -23,7 +22,6 @@
     <inputs>
         <param name="recovconsensus_filenames" format="tabular" type="data" label="filenames" />
         <param name="user" type="text" label="user" />
-        <param name="species" type="text" label="Species" />
     </inputs>
 
     <outputs>

@@ -21,6 +21,10 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../RECoVLibs/")
 from recovdb import IridaDb
 
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = TOOL_DIR + '/../recovery.conf'
+if os.path.isdir('/mnt/pulsar/files')
+    TOOL_DIR = '/mnt/pulsar/files'
+    CONFIG_FILE = TOOL_DIR + '/recovery.conf'
 
 def getMetadata(inputfiles, inuser, inspecies):
     iridaDb = IridaDb(inspecies)
@@ -59,29 +63,30 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_files', dest='input_files', help='input files')
     parser.add_argument('--user', dest='user', help='user')
-    parser.add_argument('--species', dest='species', help='species')
+    # parser.add_argument('--species', dest='species', help='species')
     parser.add_argument('--metadati', dest='metadati', help='metadati')
     parser.add_argument('--multifasta', dest='multifasta', help='multifasta')
     parser.add_argument('--response', dest='response', help='response')
     args = parser.parse_args()
     config = configparser.ConfigParser()
-    config.read(TOOL_DIR + '/../recovery.conf')
+    config.read(CONFIG_FILE)
     iridadir = config['fs']['output_path']
     gisaid_username = config['gisaid']['username']
     gisaid_password = config['gisaid']['password']
     gisaid_clientid = config['gisaid']['clientid']
 
-    if args.species == "Coronavirus" or args.species == "SARS-CoV-2":
+    species = "Coronavirus" #args.species
+    if species == "Coronavirus" or species == "SARS-CoV-2":
         multifasta_prefix = 'icogen_'
         gisaid_cli = TOOL_DIR + '/covCLI'
-    elif args.species == "Influenza A/Influenza B":
+    elif species == "Influenza A/Influenza B":
         multifasta_prefix = 'iflugen_'
         gisaid_cli = TOOL_DIR + '/fluCLI'
     else:
         multifasta_prefix = 'error_'
         gisaid_cli = 'error'
 
-    csv_header, metadata = getMetadata(args.input_files, args.user.replace("__at__", "@"), args.species)
+    csv_header, metadata = getMetadata(args.input_files, args.user.replace("__at__", "@"), species)
     sample_dict = {}
     if metadata:
         # Create MultiFasta
