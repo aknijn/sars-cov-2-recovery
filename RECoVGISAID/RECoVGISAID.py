@@ -29,7 +29,6 @@ if os.path.isdir('/mnt/pulsar/files')
 sys.path.append(LIB_DIR)
 from recovdb import IridaDb
 
-
 def getMetadata(inputfiles, inuser, inspecies):
     iridaDb = IridaDb(inspecies)
     with open(inputfiles, 'r') as f:
