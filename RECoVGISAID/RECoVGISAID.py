@@ -21,7 +21,7 @@ from datetime import datetime
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
 LIB_DIR = os.path.dirname(os.path.abspath(__file__)) + '/../RECoVLibs/'
 CONFIG_FILE = TOOL_DIR + '/../recovery.conf'
-if os.path.isdir('/mnt/pulsar/files')
+if os.path.isdir('/mnt/pulsar/files'):
     TOOL_DIR = '/mnt/pulsar/files'
     LIB_DIR = TOOL_DIR + '/RECoVLibs/'
     CONFIG_FILE = TOOL_DIR + '/recovery.conf'
@@ -39,7 +39,7 @@ def getMetadata(inputfiles, inuser, inspecies):
     header_file = iridaDb.gisaid_header_file
     iridaDb.close()
     with open(header_file) as csv_in:
-        header = [str(col).rstrip() for col in csv_in.split(',')]
+        header = [str(col).rstrip() for col in list(csv_in)[0].split(',')]
     return header, records
 
 def updateGISAID(gisaid_file, sample_dict):
