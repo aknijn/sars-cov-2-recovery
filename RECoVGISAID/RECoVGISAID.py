@@ -42,7 +42,7 @@ def getMetadata(inputfiles, inuser, inspecies):
         header = [str(col).rstrip() for col in list(csv_in)[0].split(',')]
     return header, records
 
-def updateGISAID(gisaid_file, sample_dict):
+def updateGISAID(gisaid_file, sample_dict, inspecies):
     iridaDb = IridaDb(inspecies)
     with open(gisaid_file, 'r') as f:
         uploaded_seqs = f.readlines()
@@ -110,7 +110,7 @@ def main():
         # Perform upload and create response file
         subprocess.run(gisaid_cli + " upload --username " + gisaid_username + " --password " + gisaid_password + " --clientid " + gisaid_clientid + " --fasta " + multifasta + " --metadata " + args.metadati + " --log " + args.response, shell=True)
         # Write GISAID codes to sample.externalId
-        updateGISAID(args.response, sample_dict)
+        updateGISAID(args.response, sample_dict, species)
     else:
         with open(args.multifasta, 'w') as multi_fasta:
             multi_fasta.write("Errore\n")
