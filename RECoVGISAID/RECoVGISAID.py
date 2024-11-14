@@ -66,7 +66,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_files', dest='input_files', help='input files')
     parser.add_argument('--user', dest='user', help='user')
-    # parser.add_argument('--species', dest='species', help='species')
+    parser.add_argument('--species', dest='species', help='species')
     parser.add_argument('--metadati', dest='metadati', help='metadati')
     parser.add_argument('--multifasta', dest='multifasta', help='multifasta')
     parser.add_argument('--response', dest='response', help='response')
@@ -78,7 +78,7 @@ def main():
     gisaid_password = config['gisaid']['password']
     gisaid_clientid = config['gisaid']['clientid']
 
-    species = "Coronavirus" #args.species
+    species = args.species
     if species == "Coronavirus" or species == "SARS-CoV-2":
         multifasta_prefix = 'icogen_'
         gisaid_cli = TOOL_DIR + '/covCLI'

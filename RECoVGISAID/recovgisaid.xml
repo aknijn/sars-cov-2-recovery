@@ -15,6 +15,7 @@
       $__tool_directory__/RECoVGISAID.py
       --input_files $recovgisaid_filenames
       --user '$user'
+      --species '$species'
       --metadati $recovgisaid_csv
       --multifasta $recovgisaid_fasta
       --response $recovgisaid_result
@@ -23,6 +24,7 @@
     <inputs>
         <param name="recovgisaid_filenames" format="tabular" type="data" label="filenames" />
         <param name="user" type="text" label="user" />
+        <param name="species" type="text" label="species name" />
     </inputs>
 
     <outputs>
