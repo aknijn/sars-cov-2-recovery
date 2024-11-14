@@ -1,7 +1,7 @@
 <tool id="ivar_covid_consensus" name="ivar covid consensus" version="3.3+galaxy0">
     <description>Call consensus from aligned BAM file</description>
     <requirements>
-      <requirement type="package" version="1.2">ivar</requirement>
+      <requirement type="package" version="1.4.3">ivar</requirement>
       <requirement type="package" version="1.9">samtools</requirement>
       <yield />
     </requirements>
