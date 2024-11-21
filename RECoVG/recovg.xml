@@ -6,7 +6,7 @@
         <requirement type="package" version="0.39">trimmomatic</requirement>
         <requirement type="package" version="2.3.4">bowtie2</requirement>
         <requirement type="package" version="2.17">minimap2</requirement>
-        <requirement type="package" version="1.3.1">ivar</requirement>
+        <requirement type="package" version="1.4.3">ivar</requirement>
         <requirement type="package" version="1.10">samtools</requirement>
         <requirement type="package" version="2020.2">tbb</requirement>
     </requirements>
