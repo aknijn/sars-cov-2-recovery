@@ -2,7 +2,7 @@
     <description>Call consensus from aligned BAM file</description>
     <requirements>
       <requirement type="package" version="1.4.3">ivar</requirement>
-      <requirement type="package" version="1.9">samtools</requirement>
+      <requirement type="package" version="1.21">samtools</requirement>
       <yield />
     </requirements>
     <version_command>ivar version | grep version</version_command>
