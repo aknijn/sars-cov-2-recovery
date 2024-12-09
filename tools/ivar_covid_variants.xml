@@ -1,8 +1,7 @@
 <tool id="ivar_covid_variants" name="ivar covid variants" version="3.2+galaxy0">
     <description>Call variants from aligned BAM file</description>
     <requirements>
-      <requirement type="package" version="1.4.3">ivar</requirement>
-      <requirement type="package" version="1.21">samtools</requirement>
+        <container type="singularity">ivar:1.4.3--h43eeafb_0</container>
       <yield />
     </requirements>
     <version_command>ivar version | grep version</version_command>
