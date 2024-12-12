@@ -1,8 +1,7 @@
 <tool id="remove_nucleotide_deletions" name="remove nucleotide deletions" version="3.3">
     <description>Removes deletions/insertions caused by homopolymers and NGS errors</description>
     <requirements>
-      <requirement type="package" version="1.79">biopython</requirement>
-      <requirement type="package" version="7.480">mafft</requirement>
+        <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/mafft_7.526.sif</container>
       <yield />
     </requirements>
     <command detect_errors="exit_code">
