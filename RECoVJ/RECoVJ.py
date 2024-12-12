@@ -14,73 +14,26 @@ import configparser
 import sys
 import os
 import json
-import mysql.connector
-from mysql.connector import errorcode
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../RECoVLibs/")
+from recovdb import IridaDb
 
 TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def isNewLineage(inLineage):
     isNew = False
     if not '*' in inLineage:
-        config = configparser.ConfigParser()
-        config.read(TOOL_DIR + '/../recovery.conf')
-        dbhost = config['db']['host']
-        dbdatabase = config['db']['database']
-        dbuser = config['db']['user']
-        dbpassword = config['db']['password']
-        config = {
-            'user': dbuser,
-            'password': dbpassword,
-            'host': dbhost,
-            'database': dbdatabase
-        }
-        sql = ("select * from v_sarscov2_lineages where Lineages = '" + inLineage + "'")
-        try:
-            cnx = mysql.connector.connect(**config)
-            cursor = cnx.cursor(buffered=True)
-            cursor.execute(sql)
-            result = cursor.fetchone()
-            if result == None:
-                isNew = True
-            cursor.close()
-        except mysql.connector.Error as err:
-            print(err)
-        else:
-            cnx.close()
+        iridaDb = IridaDb('Coronavirus')
+        isNew = iridaDb.isNewLineage(inLineage)
+        iridaDb.close()
     return isNew
 
 def checkNewMutation(inSpike):
     isNew = False
     New = ""
     if not inSpike == '=':
-        config = configparser.ConfigParser()
-        config.read(TOOL_DIR + '/../recovery.conf')
-        dbhost = config['db']['host']
-        dbdatabase = config['db']['database']
-        dbuser = config['db']['user']
-        dbpassword = config['db']['password']
-        config = {
-            'user': dbuser,
-            'password': dbpassword,
-            'host': dbhost,
-            'database': dbdatabase
-        }
-        try:
-            cnx = mysql.connector.connect(**config)
-            cursor = cnx.cursor(buffered=True)
-            cursor.callproc('p_NewMutations', (inSpike, ''))
-            result = [r.fetchall() for r in cursor.stored_results()]
-            New = result[0][0][0]
-            if New is not None:
-                if ";" in New:
-                    isNew = True
-            else:
-                New = ""
-            cursor.close()
-        except mysql.connector.Error as err:
-            print(err)
-        else:
-            cnx.close()
+        iridaDb = IridaDb('Coronavirus')
+        isNew, New = iridaDb.checkNewMutation(inSpike)
+        iridaDb.close()
     return isNew, New
 
 def isNotificaVariant(inLineage, inSpike):
