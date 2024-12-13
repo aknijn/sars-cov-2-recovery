@@ -1,7 +1,14 @@
 <tool id="recovg" name="RECoVG" version="4.0">
     <description>Determine input library type and trim, filter and align accordingly</description>
     <requirements>
-        <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/recovg_4.0.sif</container>
+        <requirement type="package" version="3.7">python</requirement>
+        <requirement type="package" version="0.2.4">porechop</requirement>
+        <requirement type="package" version="0.39">trimmomatic</requirement>
+        <requirement type="package" version="2.3.4">bowtie2</requirement>
+        <requirement type="package" version="2.17">minimap2</requirement>
+        <requirement type="package" version="1.3.1">ivar</requirement>
+        <requirement type="package" version="1.10">samtools</requirement>
+        <requirement type="package" version="2020.2">tbb</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
