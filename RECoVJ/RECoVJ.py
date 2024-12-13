@@ -146,9 +146,9 @@ def main():
         report_data = {}
         report_variants = []
         # prepare JSON output file
-        report_data["information_name"] = args.strain
-        report_data["region"] = args.region
-        report_data["year"] = args.year
+        report_data["information_name"] = open(args.strain).readline().rstrip()
+        report_data["region"] = open(args.region).readline().rstrip()
+        report_data["year"] = open(args.year).readline().rstrip()
         # library type
         library = open(args.librarytype).readline().rstrip()
         if library == 'iont':

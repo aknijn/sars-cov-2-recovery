@@ -1,14 +1,7 @@
 <tool id="recovg" name="RECoVG" version="4.0">
     <description>Determine input library type and trim, filter and align accordingly</description>
     <requirements>
-        <requirement type="package" version="3.7">python</requirement>
-        <requirement type="package" version="0.2.4">porechop</requirement>
-        <requirement type="package" version="0.39">trimmomatic</requirement>
-        <requirement type="package" version="2.3.4">bowtie2</requirement>
-        <requirement type="package" version="2.17">minimap2</requirement>
-        <requirement type="package" version="1.3.1">ivar</requirement>
-        <requirement type="package" version="1.10">samtools</requirement>
-        <requirement type="package" version="2020.2">tbb</requirement>
+        <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/recovg_4.0.sif</container>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -17,69 +10,26 @@
 <![CDATA[
     #import os
     #import subprocess
-    #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
-      #if str( $input_pc.forward.name ).lower().endswith(".fasta") or str( $input_pc.reverse.name ).lower().endswith(".fasta"):
-        #if os.stat( str($input_pc.forward) ).st_size < 6000 and os.stat( str($input_pc.reverse) ).st_size < 6000:
-          #set $library = "sang"
-        #else:
-          #set $library = "cons"
-        #end if
-      #else:
-        #if str( $input_pc.forward.name ).lower().endswith(".fast5") or str( $input_pc.reverse.name ).lower().endswith(".fast5"):
-          #set $library = "nano"
-        #else:
-          #if str( $input_pc.reverse.name ) == "dummy.fastq":
-            #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.forward) + ' | wc -L')
-          #else:
-            #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.reverse) + ' | wc -L')
-          #end if
-          #if int($seqlen) > 800:
-            #set $library = "nano"
-          #else:
-            #set $library = "iont"
-          #end if
-        #end if
-      #end if
-    #else:
-      #set $library = "illu"
-    #end if
-    echo $library > $librarytype &&
-    echo $strain > $strainname &&
-    touch $uploaded_fasta &&
-    #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).lower().endswith(".fasta"):
-      cp '${input_pc.reverse}' $uploaded_fasta &&
-    #else:
-      #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).lower().endswith(".fasta"):
-        cp '${input_pc.forward}' $uploaded_fasta &&
-      #end if
-    #end if
 
-    #if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1 or str($input_pc.forward.name).find("_R2_")!=-1)) or ($library == "iont" and (str($input_pc.reverse.name).find("_R1_")!=-1 or str($input_pc.reverse.name).find("_R2_")!=-1))):
-      python
-        $__tool_directory__/RECoVG.py --library $library
-        #if str( $input_pc.forward.name ) == "dummy.fastq":
-          -1 '${input_pc.reverse}' -2 '${input_pc.forward}'
-        #else:
-          -1 '${input_pc.forward}' -2 '${input_pc.reverse}'
-        #end if
-        --covidref_aligned $covidref_aligned
-        --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
-    #end if
+	#set $library = $subprocess.getoutput('cat ' + str($librarytype))
+    python
+      $__tool_directory__/RECoVG.py --library $library
+        -1 $input_forward -2 $input_reverse
+      --covidref_aligned $covidref_aligned
+      --reference_genbank $reference_genbank --reference_fasta $reference_fasta --proteinentcovid19 $proteinentcovid19
 ]]>
     </command>
 
     <inputs>
-        <param name="strain" type="text" label="Set output FASTA ID with Strain name" />
-        <param name="input_pc" type="data_collection"  format="fastqsanger" collection_type="paired" label="Paired-end FASTQ collection" help="Must be of datatype &quot;fastqsanger&quot;" optional="false" />
+        <param name="librarytype" format="txt" type="data" label="library type" />
+        <param name="input_forward" type="data" format="fastqsanger" label="Paired-end FASTQ forward" optional="false" />
+        <param name="input_reverse" type="data" format="fastqsanger" label="Paired-end FASTQ reverse" optional="false" />
     </inputs>
 
     <outputs>
-        <data name="strainname" format="txt" label="${tool.name} on ${on_string}: strain name" />
-        <data name="librarytype" format="txt" label="${tool.name} on ${on_string}: library type" />
         <data name="covidref_aligned" format="bam" label="SARS CoV-2 aligned reads on ${on_string}" />
         <data name="reference_genbank" format="genbank" label="Reference GenBank file" />
         <data name="reference_fasta" format="fasta" label="Reference fasta file" />
         <data name="proteinentcovid19" format="fasta" label="ProteineNt_Covid19 fasta file" />
-        <data name="uploaded_fasta" format="fasta" label="Uploaded fasta file" />
     </outputs>
 </tool>

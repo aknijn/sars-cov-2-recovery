@@ -1,4 +1,4 @@
-<tool id="recovi" name="RECoVERY input" version="1.0">
+<tool id="recovi" name="RECoVI" version="1.0">
     <description>Prepare input from IRIDA for workflow</description>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
@@ -46,15 +46,12 @@
       #end if
     #end if
 
-    #if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1 or str($input_pc.forward.name).find("_R2_")!=-1)) or ($library == "iont" and (str($input_pc.reverse.name).find("_R1_")!=-1 or str($input_pc.reverse.name).find("_R2_")!=-1))):
-      python
-        #if str( $input_pc.forward.name ) == "dummy.fastq":
-          cp '${input_pc.reverse}' $input_forward &&
-          cp '${input_pc.forward}' $input_reverse &&
-        #else:
-          cp '${input_pc.forward}' $input_forward &&
-          cp '${input_pc.reverse}' $input_reverse &&
-        #end if
+    #if str( $input_pc.forward.name ) == "dummy.fastq":
+      cat ${input_pc.reverse} > $input_forward &&
+      cat ${input_pc.forward} > $input_reverse
+	#else:
+      cat ${input_pc.forward} > $input_forward &&
+      cat ${input_pc.reverse} > $input_reverse
     #end if
 ]]>
     </command>

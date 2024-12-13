@@ -19,9 +19,9 @@
     </command>
 
     <inputs>
-        <param name="strain" type="text" label="name" />
-        <param name="region" type="text" label="Sample Region" />
-        <param name="year" type="text" label="Sample Year" />
+        <param name="strain" format="txt" type="data" label="name" />
+        <param name="region" format="txt" type="data" label="Sample Region" />
+        <param name="year" format="txt" type="data" label="Sample Year" />
         <param name="librarytype" format="txt" type="data" label="library type" />
         <param name="lineage" format="csv" type="data" label="lineage" />
         <param name="clade" format="tsv" type="data" label="clade" />

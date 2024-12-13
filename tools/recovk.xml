@@ -1,0 +1,33 @@
+<tool id="recovk" name="RECoVK" version="1.0">
+  <description>into single datasets</description>
+  <requirements />
+  <command>
+    <![CDATA[
+	  cat "$strainname_list" > $strainname &&
+	  cat "$sampleregion_list" > $sampleregion &&
+	  cat "$sampleyear_list" > $sampleyear &&
+	  cat "$librarytype_list" > $librarytype &&
+	  cat "$uploaded_fasta_list" > $uploaded_fasta &&
+	  cat "$input_forward_list" > $input_forward &&
+	  cat "$input_reverse_list" > $input_reverse  
+    ]]>
+  </command>
+  <inputs>
+    <param name="strainname_list" type="data" format="data" label="strain name" optional="false" multiple="true" />
+    <param name="sampleregion_list" type="data" format="data" label="sample region" optional="false" multiple="true" />
+    <param name="sampleyear_list" type="data" format="data" label="sample year" optional="false" multiple="true" />
+    <param name="librarytype_list" type="data" format="data" label="library type" optional="false" multiple="true" />
+    <param name="uploaded_fasta_list" type="data" format="data" label="Uploaded fasta file" optional="false" multiple="true" />
+    <param name="input_forward_list" type="data" format="data" label="Uploaded fastq forward file" optional="false" multiple="true" />
+    <param name="input_reverse_list" type="data" format="data" label="Uploaded fastq reverse file" optional="false" multiple="true" />
+  </inputs>
+  <outputs>
+	<data name="strainname" format_source="strainname_list" />
+    <data name="sampleregion" format_source="sampleregion_list" />
+    <data name="sampleyear" format_source="sampleyear_list" />
+    <data name="librarytype" format_source="librarytype_list" />
+    <data name="uploaded_fasta" format_source="uploaded_fasta_list" />
+    <data name="input_forward" format_source="input_forward_list" />
+    <data name="input_reverse" format_source="input_reverse_list" />
+  </outputs>
+</tool>
