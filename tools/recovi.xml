@@ -1,0 +1,78 @@
+<tool id="recovi" name="RECoVERY input" version="1.0">
+    <description>Prepare input from IRIDA for workflow</description>
+    <stdio>
+        <exit_code range="1:" level="fatal" description="Tool exception" />
+    </stdio>
+    <command>
+<![CDATA[
+    #import os
+    #import subprocess
+    #if str( $input_pc.forward.name ) == "dummy.fastq" or str( $input_pc.reverse.name ) == "dummy.fastq":
+      #if str( $input_pc.forward.name ).lower().endswith(".fasta") or str( $input_pc.reverse.name ).lower().endswith(".fasta"):
+        #if os.stat( str($input_pc.forward) ).st_size < 6000 and os.stat( str($input_pc.reverse) ).st_size < 6000:
+          #set $library = "sang"
+        #else:
+          #set $library = "cons"
+        #end if
+      #else:
+        #if str( $input_pc.forward.name ).lower().endswith(".fast5") or str( $input_pc.reverse.name ).lower().endswith(".fast5"):
+          #set $library = "nano"
+        #else:
+          #if str( $input_pc.reverse.name ) == "dummy.fastq":
+            #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.forward) + ' | wc -L')
+          #else:
+            #set $seqlen = $subprocess.getoutput('head -n 10000 ' + str($input_pc.reverse) + ' | wc -L')
+          #end if
+          #if int($seqlen) > 800:
+            #set $library = "nano"
+          #else:
+            #set $library = "iont"
+          #end if
+        #end if
+      #end if
+    #else:
+      #set $library = "illu"
+    #end if
+    echo $library > $librarytype &&
+    echo $strain > $strainname &&
+    echo $region > $sampleregion &&
+    echo $year > $sampleyear &&
+    touch $uploaded_fasta &&
+    #if str( $input_pc.forward.name ) == "dummy.fastq" and str( $input_pc.reverse.name ).lower().endswith(".fasta"):
+      cp '${input_pc.reverse}' $uploaded_fasta &&
+    #else:
+      #if str( $input_pc.reverse.name ) == "dummy.fastq" and str( $input_pc.forward.name ).lower().endswith(".fasta"):
+        cp '${input_pc.forward}' $uploaded_fasta &&
+      #end if
+    #end if
+
+    #if not (($library == "iont" and (str($input_pc.forward.name).find("_R1_")!=-1 or str($input_pc.forward.name).find("_R2_")!=-1)) or ($library == "iont" and (str($input_pc.reverse.name).find("_R1_")!=-1 or str($input_pc.reverse.name).find("_R2_")!=-1))):
+      python
+        #if str( $input_pc.forward.name ) == "dummy.fastq":
+          cp '${input_pc.reverse}' $input_forward &&
+          cp '${input_pc.forward}' $input_reverse &&
+        #else:
+          cp '${input_pc.forward}' $input_forward &&
+          cp '${input_pc.reverse}' $input_reverse &&
+        #end if
+    #end if
+]]>
+    </command>
+
+    <inputs>
+        <param name="strain" type="text" label="Strain name" />
+        <param name="region" type="text" label="Sample region" />
+        <param name="year" type="text" label="Sample year" />
+        <param name="input_pc" type="data_collection"  format="fastqsanger" collection_type="paired" label="Paired-end FASTQ collection" help="Must be of datatype &quot;fastqsanger&quot;" optional="false" />
+    </inputs>
+
+    <outputs>
+        <data name="strainname" format="txt" label="${tool.name} on ${on_string}: strain name" />
+        <data name="sampleregion" format="txt" label="${tool.name} on ${on_string}: sample region" />
+        <data name="sampleyear" format="txt" label="${tool.name} on ${on_string}: sample year" />
+        <data name="librarytype" format="txt" label="${tool.name} on ${on_string}: library type" />
+        <data name="uploaded_fasta" format="fasta" label="Uploaded fasta file" />
+        <data name="input_forward" format="fastqsanger" label="Uploaded fastq forward file" />
+        <data name="input_reverse" format="fastqsanger" label="Uploaded fastq reverse file" />
+    </outputs>
+</tool>
