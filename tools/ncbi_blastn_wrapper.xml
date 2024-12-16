@@ -1,0 +1,85 @@
+<tool id="recov_ncbi_blastn_wrapper" name="NCBI BLAST+ blastn" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@" profile="@PROFILE@">
+    <description>Search nucleotide database with nucleotide query sequence(s)</description>
+    <macros>
+        <token name="@BINARY@">blastn</token>
+        <import>ncbi_macros.xml</import>
+    </macros>
+    <expand macro="parallelism" />
+    <expand macro="preamble" />
+    <command detect_errors="aggressive">
+<![CDATA[
+## The command is a Cheetah template which allows some Python based syntax.
+## Lines starting hash hash are comments. Galaxy will turn newlines into spaces
+blastn
+@QUERY@
+@BLAST_DB_SUBJECT@
+-task '${blast_type}'
+-evalue '${evalue_cutoff}'
+@BLAST_OUTPUT@
+@THREADS@
+#if $adv_opts.adv_opts_selector=="advanced":
+${adv_opts.strand}
+@ADV_FILTER_QUERY@
+@ADV_MAX_HITS@
+@ADV_WORD_SIZE@
+#if (str($adv_opts.identity_cutoff) and float(str($adv_opts.identity_cutoff)) > 0 ):
+-perc_identity '${adv_opts.identity_cutoff}'
+#end if
+${adv_opts.ungapped}
+@ADV_ID_LIST_FILTER@
+@ADV_QCOV_HSP_PERC@
+## only use window size if dc-megablast mode is used
+#if ($blast_type == "dc-megablast"):
+   @ADV_WINDOW_SIZE@
+#end if
+@ADV_GAPOPEN@
+@ADV_GAPEXTEND@
+## End of advanced options:
+#end if
+]]>
+    </command>
+    <inputs>
+        <expand macro="nucl_query" />
+        <expand macro="input_conditional_nucleotide_db" />
+        <param name="blast_type" argument="-task" type="select" display="radio" label="Type of BLAST">
+            <option value="megablast">megablast - Traditional megablast used to find very similar (e.g., intraspecies or closely related species) sequences</option>
+            <option value="blastn">blastn - Traditional BLASTN requiring an exact match of 11, for somewhat similar sequences</option>
+            <option value="blastn-short">blastn-short - BLASTN program optimized for sequences shorter than 50 bases</option>
+            <option value="dc-megablast">dc-megablast - Discontiguous megablast used to find more distant (e.g., interspecies) sequences</option>
+            <!-- Using BLAST 2.2.24+ this gives an error:
+            BLAST engine error: Program type 'vecscreen' not supported
+            <option value="vecscreen">vecscreen</option>
+            In any case, vecscreen has gone in BLAST+ 2.2.28
+            -->
+            <!-- BLAST+ 2.2.28 also offers rmblastn -->
+        </param>
+        <expand macro="input_evalue" />
+        <expand macro="input_out_format" />
+        <expand macro="advanced_options">
+            <!-- Could use a select (yes, no, other) where other allows setting 'level window linker' -->
+            <param name="filter_query" argument="-dust" type="boolean" label="Filter out low complexity regions (with DUST)" truevalue="-dust yes" falsevalue="-dust no" checked="true" />
+            <expand macro="input_strand" />
+            <expand macro="input_max_hits" />
+            <param name="identity_cutoff" argument="-perc_identity" type="float" min="0" max="100" value="0" label="Percent identity cutoff" help="Use zero for no cutoff" />
+            <expand macro="input_word_size_blastn" />
+            <param argument="-ungapped" type="boolean" label="Perform ungapped alignment only?" truevalue="-ungapped" falsevalue="" checked="false" />
+            <expand macro="input_parse_deflines" />
+            <expand macro="advanced_optional_id_files" />
+            <expand macro="input_qcov_hsp_perc" />
+            <!-- the help text here is unique to the blastx application, so macro not used -->
+            <param name="window_size" type="integer" optional="true" min="0"
+                label="Multiple hits window size: use 0 to specify 1-hit algorithm, leave blank for default"
+                help="Only relevant for dc-megablast, and otherwise ignored. Default window size changes with substitution matrix and BLAST type.
+                    Entering a non-negative integer will override the default."/>
+            <expand macro="input_gapopen"/>
+            <expand macro="input_gapextend"/>
+        </expand>
+    </inputs>
+    <outputs>
+        <data name="output1" format="tabular" label="${blast_type.value} $query.name vs @ON_DB_SUBJECT@">
+            <expand macro="output_change_format" />
+        </data>
+    </outputs>
+    <help></help>
+    <expand macro="blast_citations" />
+</tool>

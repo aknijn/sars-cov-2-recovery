@@ -1,0 +1,57 @@
+<tool id="recov_snpEff" name="SnpEff eff:" version="@WRAPPER_VERSION@.galaxy2">
+    <description> annotate variants</description>
+    <macros>
+        <import>snpEff_macros.xml</import>
+    </macros>
+    <requirements>
+        <expand macro="requirement" />
+    </requirements>
+    <expand macro="stdio" />
+    <expand macro="version_command" />
+    <command><![CDATA[
+        snpEff @JAVA_OPTIONS@ eff
+        -i vcf -o vcf -upDownStreamLen 0
+        -classic -hgvsOld -hgvs1LetterAa -no-downstream -no-intergenic -no-intron -no-upstream -no-utr
+        #if $statsFile:
+          -stats '$statsFile'
+        #end if
+          $noLog
+        ## Regulation names can include parentheses: H3K4me3-MSC_(VB)_enriched_sites
+        ## Enclose them in in single and double quotes, as the conda snpEff bash script will remove outer quotes
+            -dataDir $__tool_directory__/snpeffdb
+            -configOption 'CovidREF.GB'.genome='CovidREF.GB'
+            -configOption 'CovidREF.GB'.codonTable='Standard'
+            'CovidREF.GB'
+        '$input' > '$snpeff_output'
+        #if $statsFile:
+            &&
+            #import os
+            #set $genes_file = str($statsFile) + '.genes.txt'
+            #set $genes_file_name = os.path.split($genes_file)[-1]
+            mkdir '$statsFile.files_path' &&
+            mv '$genes_file' '#echo os.path.join($statsFile.files_path, $genes_file_name)#'
+        #end if
+        #if $outputConditional.outputFormat == 'gatk' and $outputConditional.gatk_v1
+          &&
+          ## Replace real SnpEff version with 2.0.5 to prevent this GATK 1.x error: "The version of SnpEff used to generate the SnpEff input file (x.x) is not currently supported by the GATK. Supported versions are: [2.0.5]"
+          sed -i.bak -e 's/^\#\#SnpEffVersion="\(\S*\s\)/\#\#SnpEffVersion="2.0.5 - real is \1/' '$snpeff_output'
+        #end if
+    ]]></command>
+    <inputs>
+        <param name="input" type="data" format="vcf,bed" label="Sequence changes (SNPs, MNPs, InDels)"/>
+        <param name="generate_stats" argument="-noStats" type="boolean" truevalue="" falsevalue="-noStats" checked="true" label="Produce Summary Stats" />
+        <param argument="-noLog" type="boolean" truevalue="-noLog" falsevalue="" checked="true" label="Suppress reporting usage statistics to server" />
+    </inputs>
+    <outputs>
+        <data name="snpeff_output" format="vcf">
+            <change_format>
+                <when input="outputConditional.outputFormat" value="bed" format="bed" />
+                <when input="outputConditional.outputFormat" value="bedAnn" format="bed" />
+            </change_format>
+        </data>
+        <data name="statsFile" format="html" label="${tool.name} on ${on_string} - HTML stats">
+            <filter>generate_stats</filter>
+        </data>
+    </outputs>
+    <expand macro="citations" />
+</tool>

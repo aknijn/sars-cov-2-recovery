@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<macros>
+  <token name="@TOOL_VERSION@">1.4.3</token>
+  <token name="@PROFILE@">21.01</token>
+  <xml name="requirements">
+  <requirements>
+        <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/ivar:1.4.3--h43eeafb_0</container>
+      <yield/>
+  </requirements>
+  </xml>
+  <xml name="version_command">
+    <version_command>ivar version | grep version</version_command>
+  </xml>
+  <xrefs>
+    <xref type="bio.tools">andersen-lab_ivar</xref>
+  </xrefs>
+  <xml name="citations">
+    <citations>
+      <citation type="doi">10.1186/s13059-018-1618-7</citation>
+      <yield/>
+    </citations>
+  </xml>
+</macros>

@@ -1,0 +1,67 @@
+<tool id="recov_snpSift_extractFields" name="SnpSift Extract Fields" version="@WRAPPER_VERSION@.galaxy0">
+    <options sanitize="False" />
+    <description>from a VCF file into a tabular file</description>
+    <macros>
+        <import>snpSift_macros.xml</import>
+    </macros>
+    <expand macro="requirements" />
+    <expand macro="stdio" />
+    <expand macro="version_command" />
+    <command><![CDATA[
+@CONDA_SNPSIFT_JAR_PATH@ &&
+cat '${input}'
+#if $one_effect_per_line:
+    | perl "\$SNPSIFT_JAR_PATH/scripts/vcfEffOnePerLine.pl"
+#end if
+| SnpSift -Xmx6G extractFields
+#if $separator:
+    -s '${separator}'
+#end if
+#if $empty_text:
+    -e '${empty_text}'
+#end if
+-
+#echo ' '.join(['"%s"' % x for x in $extract.split()])
+> '${output}'
+    ]]></command>
+    <inputs>
+        <param name="input" type="data" format="vcf" label="Variant input file in VCF format"/>
+        <param name="extract" type="text" label="Fields to extract" value="CHROM POS ID REF ALT FILTER" help="Separated by spaces. See help below for an explanation" />
+        <param name="one_effect_per_line" type="boolean" truevalue="yes" falsevalue="no" checked="false" label="One effect per line" help="When variants have more than one effect, lists one effect per line, while all other parameters in the line are repeated across mutiple lines" />
+        <param name="separator" type="text" value="" label="multiple field separator" help="Separate multiple fields in one column with this character, e.g. a comma, rather than a column for each of the multiple values" argument="-s" />
+        <param name="empty_text" type="text" value="" label="empty field text" help="Represent empty fields with this value, rather than leaving them blank" argument="-e"/>
+    </inputs>
+    <outputs>
+        <data name="output" format="tabular" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" ftype="vcf" value="test_rmInfo.vcf"/>
+            <param name="extract" value="CHROM POS REF ALT EFF[*].EFFECT"/>
+            <output name="output">
+                <assert_contents>
+                    <has_text text="INTRAGENIC" />
+                    <not_has_text text="DOWNSTREAM,INTRAGENIC,INTRON,UTR_3_PRIME" />
+                </assert_contents>
+            </output>
+        </test>
+        <test>
+            <param name="input" ftype="vcf" value="test_rmInfo.vcf"/>
+            <param name="extract" value="CHROM POS REF ALT EFF[*].EFFECT"/>
+            <param name="separator" value=","/>
+            <output name="output">
+                <assert_contents>
+                    <has_text text="DOWNSTREAM,INTRAGENIC,INTRON,UTR_3_PRIME" />
+                </assert_contents>
+            </output>
+        </test>
+        <test>
+            <param name="input" ftype="vcf" value="extFields_test3_in.vcf"/>
+            <param name="extract" value="CHROM POS ID REF ALT FILTER ANN[*].EFFECT"/>
+            <param name="one_effect_per_line" value="true"/>
+            <output name="output" value="extFields_test3_out.vcf"/>
+        </test>
+    </tests>
+    <help></help>
+    <expand macro="citations" />
+</tool>
