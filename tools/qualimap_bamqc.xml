@@ -1,4 +1,4 @@
-<tool id="recov_qualimap_bamqc" name="QualiMap BamQC" version="@VERSION@+galaxy@VERSION_SUFFIX@" profile="22.05">
+<tool id="recov_qualimap_bamqc" name="RECoV QualiMap BamQC" version="@VERSION@+galaxy@VERSION_SUFFIX@" profile="22.05">
     <macros>
         <import>qualimap_macros.xml</import>
     </macros>

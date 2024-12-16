@@ -1,4 +1,4 @@
-<tool id="recov_snpEff" name="SnpEff eff:" version="@WRAPPER_VERSION@.galaxy2">
+<tool id="recov_snpEff" name="RECoV SnpEff eff:" version="@WRAPPER_VERSION@.galaxy2">
     <description> annotate variants</description>
     <macros>
         <import>snpEff_macros.xml</import>
@@ -43,12 +43,7 @@
         <param argument="-noLog" type="boolean" truevalue="-noLog" falsevalue="" checked="true" label="Suppress reporting usage statistics to server" />
     </inputs>
     <outputs>
-        <data name="snpeff_output" format="vcf">
-            <change_format>
-                <when input="outputConditional.outputFormat" value="bed" format="bed" />
-                <when input="outputConditional.outputFormat" value="bedAnn" format="bed" />
-            </change_format>
-        </data>
+        <data name="snpeff_output" format="vcf"></data>
         <data name="statsFile" format="html" label="${tool.name} on ${on_string} - HTML stats">
             <filter>generate_stats</filter>
         </data>

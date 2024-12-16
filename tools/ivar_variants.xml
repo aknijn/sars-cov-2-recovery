@@ -1,7 +1,7 @@
-<tool id="recov_ivar_variants" name="ivar variants" version="@TOOL_VERSION@+galaxy1" profile="@PROFILE@">
+<tool id="recov_ivar_variants" name="RECoV ivar variants" version="@TOOL_VERSION@+galaxy1" profile="@PROFILE@">
     <description>Call variants from aligned BAM file</description>
     <macros>
-        <import>macros.xml</import>
+        <import>ivar_variants_macros.xml</import>
     </macros>
     <expand macro="requirements"/>
     <expand macro="version_command"/>
