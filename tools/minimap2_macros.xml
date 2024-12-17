@@ -11,7 +11,7 @@
     </xml>
     <xml name="requirements">
         <requirements>
-		    <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/minimap2:2.28--he4a0461_3</container>
+		    <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/minimap2.sif</container>
         </requirements>
     </xml>
     <xml name="pe_anaylsis_fixed_selector">
