@@ -1,7 +1,7 @@
 <tool id="recovconsensus" name="RECoVConsensus" version="1.0">
     <description>Download consensus files</description>
     <requirements>
-        <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/mysql-connector-python_9.1.0.sif</container>
+        <container type="singularity">/infs/singularity/mysql-connector-python_9.1.0.sif</container>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />

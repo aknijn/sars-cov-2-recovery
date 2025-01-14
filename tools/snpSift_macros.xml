@@ -1,7 +1,7 @@
 <macros>
     <xml name="requirements">
         <requirements>
-            <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/snpsift:4.3.1t--hdfd78af_3</container>
+            <container type="singularity">/infs/singularity/snpsift:4.3.1t--hdfd78af_3</container>
         </requirements>
     </xml>
     <xml name="stdio">

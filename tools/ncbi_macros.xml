@@ -9,7 +9,7 @@
 
     <xml name="preamble">
         <requirements>
-            <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/blast:2.14.1--pl5321h6f7f691_0</container>
+            <container type="singularity">/infs/singularity/blast:2.14.1--pl5321h6f7f691_0</container>
             <yield />
         </requirements>
         <version_command>@BINARY@ -version</version_command>

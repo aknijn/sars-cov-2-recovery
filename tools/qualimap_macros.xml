@@ -4,7 +4,7 @@
 
     <xml name="requirements">
         <requirements>
-            <container type="singularity">/issd/galaxy-icogen/var/cache/singularity/explicit/qualimap:2.3--hdfd78af_0</container>
+            <container type="singularity">/infs/singularity/qualimap:2.3--hdfd78af_0</container>
             <yield />
         </requirements>
     </xml>
