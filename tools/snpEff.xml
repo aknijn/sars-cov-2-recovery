@@ -9,6 +9,7 @@
     <expand macro="stdio" />
     <expand macro="version_command" />
     <command><![CDATA[
+        #import os
         snpEff @JAVA_OPTIONS@ eff
         -i vcf -o vcf -upDownStreamLen 0
         -classic -hgvsOld -hgvs1LetterAa -no-downstream -no-intergenic -no-intron -no-upstream -no-utr
@@ -18,14 +19,17 @@
           $noLog
         ## Regulation names can include parentheses: H3K4me3-MSC_(VB)_enriched_sites
         ## Enclose them in in single and double quotes, as the conda snpEff bash script will remove outer quotes
+          #if os.stat( str($input) ).st_size < 6000:
+            -dataDir $__tool_directory__/snpeffdb_spike
+          #else:
             -dataDir $__tool_directory__/snpeffdb
-            -configOption 'CovidREF.GB'.genome='CovidREF.GB'
-            -configOption 'CovidREF.GB'.codonTable='Standard'
-            'CovidREF.GB'
-        '$input' > '$snpeff_output'
+          #end if
+          -configOption 'CovidREF.GB'.genome='CovidREF.GB'
+          -configOption 'CovidREF.GB'.codonTable='Standard'
+          'CovidREF.GB'
+          '$input' > '$snpeff_output'
         #if $statsFile:
             &&
-            #import os
             #set $genes_file = str($statsFile) + '.genes.txt'
             #set $genes_file_name = os.path.split($genes_file)[-1]
             mkdir '$statsFile.files_path' &&
