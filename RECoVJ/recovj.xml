@@ -1,7 +1,7 @@
 <tool id="recovj" name="RECoVJ" version="3.4">
     <description>Collect all results and elaborate them in a json file</description>
     <requirements>
-        <container type="singularity">/infs/singularity/mysql-connector-python_9.1.0.sif</container>
+        <container type="singularity">/ihdd/singularity/mysql-connector-python_9.1.0.sif</container>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />
