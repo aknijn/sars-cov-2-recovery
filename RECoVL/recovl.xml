@@ -1,7 +1,7 @@
 <tool id="recovl" name="RECoVL" version="3.4">
     <description>Try to obtain a lineage from the consensus using pangolin</description>
     <requirements>
-        <container type="singularity">/home/galaxy/singularity/pangolin_4.3.1_pangolin-data_1.31.sif</container>
+        <container type="singularity">/ihdd/singularity/pangolin_4.3.1_pangolin-data_1.31.sif</container>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />

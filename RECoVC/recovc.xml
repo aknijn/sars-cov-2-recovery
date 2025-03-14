@@ -1,7 +1,7 @@
 <tool id="recovc" name="RECoVC" version="3.4">
     <description>Try to obtain a clade from the consensus using nextclade</description>
     <requirements>
-        <container type="singularity">/home/galaxy/singularity/nextclade:3.9.1--h9ee0642_0</container>
+        <container type="singularity">/ihdd/singularity/nextclade:3.9.1--h9ee0642_0</container>
     </requirements>
     <stdio>
         <exit_code range="1:" level="fatal" description="Tool exception" />

@@ -9,7 +9,7 @@
 
     <xml name="preamble">
         <requirements>
-            <container type="singularity">/home/galaxy/singularity/blast:2.14.1--pl5321h6f7f691_0</container>
+            <container type="singularity">/ihdd/singularity/blast:2.14.1--pl5321h6f7f691_0</container>
             <yield />
         </requirements>
         <version_command>@BINARY@ -version</version_command>
