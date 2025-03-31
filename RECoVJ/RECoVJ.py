@@ -235,6 +235,8 @@ def main():
         elif report_data["clade"][0:11] == "recombinant":
             report_data["clade"] = "ND"
             report_data["notifica"] = "analisi incerta"
+        elif report_data["clade"][0:3] == "21M":
+            report_data["notifica"] = "BA.3"
         notificaVariantSpot = isNotificaVariant2(report_data["variante"], report_data["S-protein"], report_data["ORF1ab"], report_data["E-protein"])
         if notificaVariantSpot != "-":
             report_data["notifica"] = notificaVariantSpot
