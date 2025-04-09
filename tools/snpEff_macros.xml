@@ -1,6 +1,6 @@
 <macros>
     <xml name="requirement">
-		<container type="singularity">/ihdd/singularity/snpeff:4.3.1t--hdfd78af_5</container>
+		<container type="singularity">/netappfs/singularity/snpeff:4.3.1t--hdfd78af_5</container>
         <yield/>
     </xml>
   <xml name="stdio">

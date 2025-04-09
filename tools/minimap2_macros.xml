@@ -11,7 +11,7 @@
     </xml>
     <xml name="requirements">
         <requirements>
-		    <container type="singularity">/ihdd/singularity/minimap2.sif</container>
+		    <container type="singularity">/netappfs/singularity/minimap2.sif</container>
         </requirements>
     </xml>
     <xml name="pe_anaylsis_fixed_selector">
